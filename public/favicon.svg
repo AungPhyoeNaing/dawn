@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#080C16" />
+      <stop offset="50%" stop-color="#111B33" />
+      <stop offset="100%" stop-color="#1E2A4A" />
+    </linearGradient>
+    <linearGradient id="sunGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#D97706" />
+      <stop offset="40%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#FEF08A" />
+    </linearGradient>
+    <radialGradient id="glowGrad" cx="50%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="horizonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.1" />
+      <stop offset="50%" stop-color="#FEF08A" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#skyGrad)" />
+  
+  <!-- Subtle Horizon Glow -->
+  <circle cx="256" cy="310" r="210" fill="url(#glowGrad)" />
+
+  <!-- Sun Rays -->
+  <g stroke="#F59E0B" stroke-width="4" stroke-linecap="round" opacity="0.6">
+    <line x1="256" y1="140" x2="256" y2="100" />
+    <line x1="180" y1="170" x2="150" y2="140" />
+    <line x1="332" y1="170" x2="362" y2="140" />
+    <line x1="125" y1="240" x2="85" y2="230" />
+    <line x1="387" y1="240" x2="427" y2="230" />
+  </g>
+
+  <!-- Rising Sun -->
+  <circle cx="256" cy="310" r="105" fill="url(#sunGrad)" />
+
+  <!-- Horizon Line Silhouette -->
+  <path d="M 64 340 Q 256 310 448 340 L 448 448 L 64 448 Z" fill="#080C16" />
+
+  <!-- Horizon Accent Light Line -->
+  <path d="M 70 340 Q 256 310 442 340" stroke="url(#horizonGrad)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+  <!-- Subtle Mountain Silhouette -->
+  <path d="M 120 340 L 195 285 L 260 330 L 335 270 L 400 340 Z" fill="#0D1527" opacity="0.9" />
+
+  <!-- Mountain Peak Sun Gold Catch -->
+  <path d="M 195 285 L 205 298 L 188 298 Z" fill="#FBBF24" opacity="0.7" />
+  <path d="M 335 270 L 347 285 L 328 285 Z" fill="#FEF08A" opacity="0.8" />
+</svg>
