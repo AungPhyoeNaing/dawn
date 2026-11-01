@@ -39,7 +39,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-dawn-surface/95 backdrop-blur-lg border-t border-dawn-border/70 pb-safe transition-colors">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-dawn-surface/75 backdrop-blur-2xl border-t border-white/[0.08] pb-safe transition-all shadow-[0_-8px_32px_0_rgba(0,0,0,0.4)]">
       <div className="max-w-lg mx-auto flex items-center justify-around px-2 h-16">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -57,26 +57,26 @@ export const BottomNav: React.FC<BottomNavProps> = ({
             >
               <div className="relative">
                 <Icon
-                  className={`w-5 h-5 transition-transform ${
-                    isActive ? 'scale-110 stroke-[2.4]' : 'scale-100 stroke-[1.8]'
+                  className={`w-5 h-5 transition-transform duration-200 ${
+                    isActive ? 'scale-110 stroke-[2.4] drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'scale-100 stroke-[1.8]'
                   }`}
                 />
                 {tab.id === 'rituals' && ritualsProgressPct > 0 && ritualsProgressPct < 100 && (
-                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-dawn-gold animate-pulse" />
+                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-dawn-gold shadow-gold-sm animate-pulse" />
                 )}
                 {tab.id === 'rituals' && ritualsProgressPct === 100 && (
-                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 )}
               </div>
               <span
                 className={`text-[10px] mt-1 tracking-tight font-medium ${
-                  isActive ? 'text-dawn-gold font-semibold' : 'text-dawn-muted'
+                  isActive ? 'text-dawn-gold font-bold drop-shadow-[0_0_6px_rgba(245,158,11,0.3)]' : 'text-dawn-muted'
                 }`}
               >
                 {tab.label}
               </span>
               {isActive && (
-                <div className="absolute bottom-1 w-6 h-0.5 rounded-full bg-dawn-gold shadow-gold-sm" />
+                <div className="absolute bottom-1 w-6 h-0.5 rounded-full bg-gradient-to-r from-dawn-gold to-dawn-gold-light shadow-gold-sm" />
               )}
             </button>
           );

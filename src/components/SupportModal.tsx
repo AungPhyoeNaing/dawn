@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   ChevronRight,
   ShieldCheck,
-  Compass,
 } from 'lucide-react';
 import { SUPPORT_ALTERNATIVES, GROUNDING_STEPS, TRIGGER_OPTIONS } from '../data/support';
 import { playMindfulBell } from '../utils/timer';
@@ -79,31 +78,37 @@ export const SupportModal: React.FC<SupportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-dawn-dark text-dawn-light overflow-y-auto pt-safe pb-safe animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex flex-col bg-dawn-dark/95 backdrop-blur-3xl text-dawn-light overflow-y-auto pt-safe pb-safe animate-in fade-in duration-200">
+      {/* Liquid background orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-1/4 -right-20 w-80 h-80 rounded-full bg-rose-500/15 blur-[90px]" />
+        <div className="absolute bottom-1/3 -left-20 w-80 h-80 rounded-full bg-dawn-gold/15 blur-[90px]" />
+      </div>
+
       {/* Top Bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-dawn-border/60 bg-dawn-surface/80 backdrop-blur-md sticky top-0 z-10">
+      <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-dawn-dark/60 backdrop-blur-2xl sticky top-0">
         <div className="flex items-center space-x-2">
-          <div className="w-7 h-7 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center">
-            <Heart className="w-3.5 h-3.5 fill-rose-500/30" />
+          <div className="w-8 h-8 rounded-xl bg-rose-500/20 border border-rose-400/30 text-rose-400 flex items-center justify-center shadow-sm">
+            <Heart className="w-4 h-4 fill-rose-500/30" />
           </div>
-          <span className="text-sm font-semibold text-white">Sanctuary & Support</span>
+          <span className="text-sm font-bold text-white tracking-tight">Sanctuary & Support</span>
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-full bg-dawn-card text-dawn-muted hover:text-white transition-colors min-h-touch min-w-touch flex items-center justify-center"
+          className="p-1.5 rounded-full bg-white/[0.06] border border-white/10 text-dawn-muted hover:text-white transition-colors min-h-touch min-w-touch flex items-center justify-center"
           aria-label="Close support modal"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      <div className="p-4 max-w-md mx-auto w-full space-y-4 flex-1">
+      <div className="relative z-10 p-4 max-w-md mx-auto w-full space-y-4 flex-1">
         {/* Reassurance Banner */}
-        <div className="bg-gradient-to-r from-dawn-card to-dawn-surface border border-dawn-border rounded-2xl p-4 text-center space-y-1.5 shadow-lg">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-dawn-gold">
+        <div className="glass-card rounded-3xl p-4.5 text-center space-y-1.5 shadow-xl">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-dawn-gold">
             You are safe & in control
           </p>
-          <h2 className="text-base font-bold text-white leading-snug">
+          <h2 className="text-base font-extrabold text-white leading-snug drop-shadow-sm">
             Urges are temporary waves.
           </h2>
           <p className="text-xs text-slate-300 leading-relaxed">
@@ -112,15 +117,15 @@ export const SupportModal: React.FC<SupportModalProps> = ({
         </div>
 
         {/* Section Tabs */}
-        <div className="grid grid-cols-4 gap-1 p-1 bg-dawn-surface rounded-xl border border-dawn-border text-xs">
+        <div className="grid grid-cols-4 gap-1 p-1 bg-white/[0.04] rounded-2xl border border-white/10 text-xs backdrop-blur-md">
           <button
             onClick={() => {
               setActiveSection('breathe');
               playMindfulBell({ pitch: 360, duration: 2.0 });
             }}
-            className={`py-2 px-1 rounded-lg font-medium transition-all text-center ${
+            className={`py-2 px-1 rounded-xl font-bold transition-all text-center active:scale-95 ${
               activeSection === 'breathe'
-                ? 'bg-dawn-gold text-dawn-dark font-semibold shadow-gold-sm'
+                ? 'bg-dawn-gold text-dawn-dark shadow-gold-sm'
                 : 'text-dawn-muted hover:text-white'
             }`}
           >
@@ -128,9 +133,9 @@ export const SupportModal: React.FC<SupportModalProps> = ({
           </button>
           <button
             onClick={() => setActiveSection('ground')}
-            className={`py-2 px-1 rounded-lg font-medium transition-all text-center ${
+            className={`py-2 px-1 rounded-xl font-bold transition-all text-center active:scale-95 ${
               activeSection === 'ground'
-                ? 'bg-dawn-gold text-dawn-dark font-semibold shadow-gold-sm'
+                ? 'bg-dawn-gold text-dawn-dark shadow-gold-sm'
                 : 'text-dawn-muted hover:text-white'
             }`}
           >
@@ -138,9 +143,9 @@ export const SupportModal: React.FC<SupportModalProps> = ({
           </button>
           <button
             onClick={() => setActiveSection('alternatives')}
-            className={`py-2 px-1 rounded-lg font-medium transition-all text-center ${
+            className={`py-2 px-1 rounded-xl font-bold transition-all text-center active:scale-95 ${
               activeSection === 'alternatives'
-                ? 'bg-dawn-gold text-dawn-dark font-semibold shadow-gold-sm'
+                ? 'bg-dawn-gold text-dawn-dark shadow-gold-sm'
                 : 'text-dawn-muted hover:text-white'
             }`}
           >
@@ -148,9 +153,9 @@ export const SupportModal: React.FC<SupportModalProps> = ({
           </button>
           <button
             onClick={() => setActiveSection('trigger')}
-            className={`py-2 px-1 rounded-lg font-medium transition-all text-center ${
+            className={`py-2 px-1 rounded-xl font-bold transition-all text-center active:scale-95 ${
               activeSection === 'trigger'
-                ? 'bg-dawn-gold text-dawn-dark font-semibold shadow-gold-sm'
+                ? 'bg-dawn-gold text-dawn-dark shadow-gold-sm'
                 : 'text-dawn-muted hover:text-white'
             }`}
           >
@@ -160,59 +165,59 @@ export const SupportModal: React.FC<SupportModalProps> = ({
 
         {/* SECTION 1: BREATHING */}
         {activeSection === 'breathe' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-6 text-center space-y-6">
+          <div className="glass-card rounded-3xl p-6 text-center space-y-6 shadow-2xl">
             <div className="space-y-1">
-              <span className="text-xs text-dawn-muted uppercase font-semibold tracking-wider">
+              <span className="text-xs text-dawn-muted uppercase font-bold tracking-wider">
                 Box Breathing Technique
               </span>
-              <h3 className="text-sm font-medium text-slate-200">
+              <h3 className="text-sm font-semibold text-slate-200">
                 Regulate your autonomic nervous system
               </h3>
             </div>
 
-            {/* Breathing Circle Visualizer */}
+            {/* Breathing Circle Visualizer with Liquid Expansion */}
             <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
               <div
-                className={`absolute inset-0 rounded-full border-2 border-dawn-gold/30 transition-all duration-1000 ${
+                className={`absolute inset-0 rounded-full border-2 border-dawn-gold/40 transition-all duration-1000 ${
                   breathePhase === 'Inhale'
-                    ? 'scale-110 bg-dawn-gold/15'
+                    ? 'scale-110 bg-dawn-gold/20 shadow-[0_0_30px_rgba(245,158,11,0.3)]'
                     : breathePhase === 'Hold'
-                    ? 'scale-110 bg-dawn-gold/25'
+                    ? 'scale-110 bg-dawn-gold/30 shadow-[0_0_40px_rgba(245,158,11,0.4)]'
                     : breathePhase === 'Exhale'
-                    ? 'scale-75 bg-dawn-gold/5'
+                    ? 'scale-75 bg-dawn-gold/10 shadow-none'
                     : 'scale-75 bg-transparent'
                 }`}
               />
               <div className="relative z-10 space-y-1">
-                <p className="text-2xl font-bold tracking-tight text-white">{breathePhase}</p>
-                <p className="text-xs font-semibold text-dawn-gold">{breatheSeconds}s</p>
+                <p className="text-2xl font-black tracking-tight text-white drop-shadow-md">{breathePhase}</p>
+                <p className="text-xs font-extrabold text-dawn-gold">{breatheSeconds}s</p>
               </div>
             </div>
 
             <p className="text-xs text-dawn-muted max-w-xs mx-auto">
-              Follow the rhythm gently. Each slow exhalation signals your amygdala that there is no emergency.
+              Follow the rhythm gently. Each slow exhalation signals your nervous system that you are completely safe.
             </p>
           </div>
         )}
 
         {/* SECTION 2: 5-4-3-2-1 GROUNDING */}
         {activeSection === 'ground' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-5 space-y-4">
+          <div className="glass-card rounded-3xl p-5 space-y-4 shadow-xl">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-xs font-semibold uppercase text-dawn-gold tracking-wider">
+                <span className="text-xs font-bold uppercase text-dawn-gold tracking-wider">
                   Sensory Grounding
                 </span>
-                <h3 className="text-sm font-bold text-white">5-4-3-2-1 Technique</h3>
+                <h3 className="text-sm font-extrabold text-white">5-4-3-2-1 Technique</h3>
               </div>
               <span className="text-xs text-dawn-muted font-medium">
                 Step {currentGroundingIndex + 1} of 5
               </span>
             </div>
 
-            <div className="bg-dawn-surface p-4 rounded-xl border border-dawn-border space-y-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-dawn-gold/20 text-dawn-gold flex items-center justify-center font-bold text-lg">
+            <div className="bg-white/[0.04] p-4 rounded-2xl border border-white/10 space-y-3 backdrop-blur-md">
+              <div className="flex items-center space-x-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-dawn-gold/25 border border-dawn-gold/40 text-dawn-gold flex items-center justify-center font-black text-lg shadow-gold-sm">
                   {GROUNDING_STEPS[currentGroundingIndex].count}
                 </div>
                 <div>
@@ -230,7 +235,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({
               <button
                 disabled={currentGroundingIndex === 0}
                 onClick={() => setCurrentGroundingIndex((i) => Math.max(0, i - 1))}
-                className="px-3 py-2 text-xs text-dawn-muted disabled:opacity-30 hover:text-white"
+                className="px-3.5 py-2 text-xs text-dawn-muted disabled:opacity-30 hover:text-white"
               >
                 Previous
               </button>
@@ -238,13 +243,13 @@ export const SupportModal: React.FC<SupportModalProps> = ({
               {currentGroundingIndex < GROUNDING_STEPS.length - 1 ? (
                 <button
                   onClick={() => setCurrentGroundingIndex((i) => Math.min(GROUNDING_STEPS.length - 1, i + 1))}
-                  className="px-4 py-2 bg-dawn-gold hover:bg-dawn-gold-hover text-dawn-dark font-semibold text-xs rounded-xl flex items-center space-x-1"
+                  className="px-4 py-2.5 liquid-gold-button font-bold text-xs rounded-xl flex items-center space-x-1"
                 >
                   <span>Next Step</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               ) : (
-                <div className="flex items-center space-x-1 text-emerald-400 text-xs font-semibold">
+                <div className="flex items-center space-x-1 text-emerald-400 text-xs font-bold">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Grounding Complete</span>
                 </div>
@@ -261,7 +266,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({
                 Instant State Changers
               </h3>
               <p className="text-[11px] text-dawn-muted">
-                Dopamine urges are driven by energy seeking an outlet. Redirect it purposefully:
+                Urges are excess energy seeking expression. Redirect it purposefully:
               </p>
             </div>
 
@@ -269,9 +274,9 @@ export const SupportModal: React.FC<SupportModalProps> = ({
               {SUPPORT_ALTERNATIVES.map((alt) => (
                 <div
                   key={alt.id}
-                  className="p-3.5 bg-dawn-card rounded-xl border border-dawn-border flex items-start space-x-3 hover:border-dawn-gold/40 transition-colors"
+                  className="p-3.5 glass-card glass-card-interactive rounded-2xl flex items-start space-x-3.5"
                 >
-                  <div className="p-2 rounded-lg bg-dawn-surface shrink-0">
+                  <div className="p-2.5 rounded-xl bg-white/[0.05] border border-white/10 shrink-0">
                     {getAlternativeIcon(alt.icon)}
                   </div>
                   <div className="space-y-0.5">
@@ -286,9 +291,9 @@ export const SupportModal: React.FC<SupportModalProps> = ({
 
         {/* SECTION 4: TRIGGER REFLECTION */}
         {activeSection === 'trigger' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 space-y-4">
+          <div className="glass-card rounded-3xl p-5 space-y-4 shadow-xl">
             <div className="space-y-1">
-              <h3 className="text-xs font-bold text-white uppercase tracking-wider text-dawn-gold">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-dawn-gold">
                 Curious Self-Reflection
               </h3>
               <p className="text-xs text-slate-300">
@@ -301,10 +306,10 @@ export const SupportModal: React.FC<SupportModalProps> = ({
                 <button
                   key={trig}
                   onClick={() => setSelectedTrigger(trig)}
-                  className={`text-xs px-2.5 py-1.5 rounded-lg border text-left transition-all ${
+                  className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
                     selectedTrigger === trig
-                      ? 'bg-dawn-gold/25 border-dawn-gold text-dawn-gold font-medium'
-                      : 'bg-dawn-surface border-dawn-border text-slate-300 hover:text-white'
+                      ? 'bg-dawn-gold/25 border-dawn-gold text-dawn-gold font-bold shadow-gold-sm'
+                      : 'bg-white/[0.04] border-white/10 text-slate-300 hover:text-white'
                   }`}
                 >
                   {trig}
@@ -319,12 +324,12 @@ export const SupportModal: React.FC<SupportModalProps> = ({
                 onChange={(e) => setTriggerNotes(e.target.value)}
                 rows={2}
                 placeholder="I noticed I was procrastinating on my report..."
-                className="w-full bg-dawn-surface border border-dawn-border rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-dawn-gold resize-none"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-dawn-gold resize-none"
               />
             </div>
 
             {isLogged ? (
-              <div className="p-2.5 bg-emerald-500/15 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs flex items-center space-x-2">
+              <div className="p-3 bg-emerald-500/20 border border-emerald-500/40 rounded-2xl text-emerald-300 text-xs flex items-center space-x-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Reflection noted with compassion. You are back in control.</span>
               </div>
@@ -332,7 +337,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({
               <button
                 disabled={!selectedTrigger}
                 onClick={handleSaveTrigger}
-                className="w-full py-2.5 bg-dawn-gold hover:bg-dawn-gold-hover disabled:opacity-40 text-dawn-dark font-semibold text-xs rounded-xl transition-all"
+                className="w-full py-3 liquid-gold-button disabled:opacity-40 text-xs rounded-2xl transition-all"
               >
                 Log Reflection & Reset
               </button>
@@ -341,17 +346,17 @@ export const SupportModal: React.FC<SupportModalProps> = ({
         )}
 
         {/* Positive Closing Reassurance */}
-        <div className="p-3.5 rounded-xl bg-dawn-surface/70 border border-dawn-border flex items-center space-x-3">
+        <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center space-x-3 backdrop-blur-md">
           <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
           <p className="text-[11px] text-slate-300 leading-snug">
-            By taking these few conscious minutes, you have already broken the automatic loop. Take pride in your awareness.
+            By taking these conscious minutes, you have already broken the automatic loop. Take pride in your awareness.
           </p>
         </div>
 
         {/* Bottom Exit */}
         <button
           onClick={onClose}
-          className="w-full py-3 bg-gradient-to-r from-dawn-gold to-dawn-gold-light text-dawn-dark font-bold text-xs uppercase tracking-wider rounded-xl shadow-gold-sm transition-transform active:scale-98 min-h-[44px]"
+          className="w-full py-3.5 liquid-gold-button text-xs uppercase tracking-wider rounded-2xl min-h-[44px] active:scale-98"
         >
           Return to My Day, Grounded & Centered
         </button>

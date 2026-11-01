@@ -9,19 +9,19 @@ export default {
     extend: {
       colors: {
         dawn: {
-          dark: '#080C16',      // Deep midnight navy
-          surface: '#0F172A',   // Rich navy surface card
-          card: '#162035',      // Elevated navy card
-          cardHover: '#1E2C48',
-          border: '#233252',    // Subtle navy border
-          muted: '#8E9EB8',     // Secondary slate text
+          dark: '#060913',      // Deep midnight liquid base
+          surface: '#0B1120',   // Rich navy surface
+          card: '#111A2E',      // Elevated glass card
+          cardHover: '#182542',
+          border: 'rgba(255, 255, 255, 0.08)', // Subtle liquid glass border
+          muted: '#8FA0BD',     // Secondary slate text
           light: '#F8FAFC',
           gold: {
             DEFAULT: '#F59E0B', // Sunrise warm gold
-            light: '#FCD34D',
+            light: '#FDE68A',
             dark: '#D97706',
             hover: '#FBBF24',
-            glow: 'rgba(245, 158, 11, 0.25)',
+            glow: 'rgba(245, 158, 11, 0.35)',
           },
           amber: '#F59E0B',
           rose: '#F43F5E',
@@ -49,8 +49,25 @@ export default {
         'touch': '44px',
       },
       boxShadow: {
-        'gold-glow': '0 0 20px -3px rgba(245, 158, 11, 0.3)',
-        'gold-sm': '0 0 10px -2px rgba(245, 158, 11, 0.25)',
+        'gold-glow': '0 0 25px -2px rgba(245, 158, 11, 0.35)',
+        'gold-sm': '0 0 12px -1px rgba(245, 158, 11, 0.3)',
+        'glass-card': '0 10px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15)',
+        'glass-inset': 'inset 0 1px 1px 0 rgba(255, 255, 255, 0.2)',
+      },
+      animation: {
+        'liquid-slow': 'liquidFloat1 18s ease-in-out infinite alternate',
+        'liquid-pulse': 'liquidPulse 8s ease-in-out infinite',
+      },
+      keyframes: {
+        liquidFloat1: {
+          '0%': { transform: 'translate(0px, 0px) scale(1)' },
+          '50%': { transform: 'translate(30px, -20px) scale(1.1)' },
+          '100%': { transform: 'translate(-20px, 20px) scale(0.95)' },
+        },
+        liquidPulse: {
+          '0%, 100%': { opacity: '0.4' },
+          '50%': { opacity: '0.7' },
+        }
       }
     },
   },

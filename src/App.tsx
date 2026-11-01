@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
+import type {
   RitualType,
   RitualSession,
   DisciplineGoal,
@@ -11,7 +11,7 @@ import { db, initializeDatabase } from './db/db';
 import { getLocalDateString } from './utils/date';
 import { ROUTINE_PRESETS } from './data/rituals';
 import { Header } from './components/Header';
-import { BottomNav, TabType } from './components/BottomNav';
+import { BottomNav, type TabType } from './components/BottomNav';
 import { HomeTab } from './components/HomeTab';
 import { RitualsTab } from './components/RitualsTab';
 import { FocusTab } from './components/FocusTab';
@@ -277,7 +277,19 @@ export function App() {
   );
 
   return (
-    <div className="min-h-screen bg-dawn-dark text-dawn-light flex flex-col font-sans selection:bg-dawn-gold selection:text-dawn-dark">
+    <div className="relative min-h-screen bg-dawn-dark text-dawn-light flex flex-col font-sans selection:bg-dawn-gold selection:text-dawn-dark overflow-x-hidden">
+      {/* LIQUID AMBIENT BACKGROUND ORBS */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {/* Top Sunrise Gold Liquid Orb */}
+        <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-dawn-gold/25 via-dawn-gold/10 to-transparent blur-[85px] animate-liquid-slow" />
+        
+        {/* Mid-Left Oceanic Sky Liquid Orb */}
+        <div className="absolute top-1/3 -left-28 w-80 h-80 rounded-full bg-gradient-to-tr from-sky-500/18 via-indigo-600/10 to-transparent blur-[95px] animate-liquid-pulse" />
+        
+        {/* Bottom Celestial Rose/Violet Liquid Orb */}
+        <div className="absolute bottom-16 right-[-10%] w-72 h-72 rounded-full bg-gradient-to-tl from-dawn-rose/15 via-purple-600/10 to-transparent blur-[90px] animate-liquid-slow" />
+      </div>
+
       {/* Sticky Header with SOS and Settings */}
       <Header
         onOpenSupport={() => setIsSupportOpen(true)}
@@ -287,7 +299,7 @@ export function App() {
       />
 
       {/* Main Content Area — Mobile First (375px primary, responsive up to tablet/desktop) */}
-      <main className="flex-1 w-full max-w-lg mx-auto px-3.5 pt-3 pb-nav transition-all">
+      <main className="relative z-10 flex-1 w-full max-w-lg mx-auto px-3.5 pt-3 pb-nav transition-all">
         {activeTab === 'home' && (
           <HomeTab
             userName={settings.userName}
@@ -338,14 +350,14 @@ export function App() {
         )}
       </main>
 
-      {/* Fixed Bottom Navigation Bar with Safe Area Inset */}
+      {/* Fixed Bottom Navigation Bar with Safe Area Inset & Liquid Glass Frosted Sheen */}
       <BottomNav
         activeTab={activeTab}
         onChangeTab={setActiveTab}
         ritualsProgressPct={ritualsProgressPct}
       />
 
-      {/* Active Ritual Runner Overlay (Silence, Affirmations, Visualization, Exercise, Reading, Scribing) */}
+      {/* Active Ritual Runner Overlay */}
       {activeRunner && (
         <ActiveRitualRunner
           ritualType={activeRunner.ritual}
@@ -406,21 +418,21 @@ export function App() {
 
       {/* Explicit iOS Guide Modal if triggered from settings */}
       {showIOSGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="bg-dawn-card border border-dawn-border rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-3">
-            <h3 className="text-sm font-bold text-white">How to Install on iPhone SE</h3>
-            <div className="space-y-2 text-xs text-slate-300 bg-dawn-surface p-3 rounded-2xl border border-dawn-border">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xl animate-in fade-in duration-200">
+          <div className="glass-panel rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-3 shadow-2xl">
+            <h3 className="text-sm font-bold text-white tracking-tight">How to Install on iPhone SE</h3>
+            <div className="space-y-2 text-xs text-slate-300 bg-white/[0.04] p-3.5 rounded-2xl border border-white/10 backdrop-blur-md">
               <p>1. Open Safari and navigate to this app URL.</p>
               <p>2. Tap the <strong>Share</strong> button (square with arrow) at the bottom.</p>
               <p>3. Scroll down and select <strong>Add to Home Screen</strong>.</p>
               <p>4. Tap <strong>Add</strong> in the top-right corner.</p>
-              <p className="text-[11px] text-dawn-gold mt-1">
+              <p className="text-[11px] text-dawn-gold mt-1 font-medium">
                 The app will launch in full standalone fullscreen without browser address bars!
               </p>
             </div>
             <button
               onClick={() => setShowIOSGuide(false)}
-              className="w-full py-2.5 bg-dawn-gold text-dawn-dark font-bold text-xs rounded-xl"
+              className="w-full py-2.5 liquid-gold-button text-xs rounded-xl"
             >
               Close Guide
             </button>

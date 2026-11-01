@@ -13,9 +13,8 @@ import {
   RotateCcw,
   Sliders,
 } from 'lucide-react';
-import { RitualType, RitualSession, RoutinePreset, UserSettings } from '../types';
+import type { RitualType, RitualSession, UserSettings } from '../types';
 import { RITUAL_DEFINITIONS, ROUTINE_PRESETS } from '../data/rituals';
-import { db } from '../db/db';
 
 interface RitualsTabProps {
   todaySession: RitualSession | null;
@@ -72,12 +71,12 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
           <span className="text-[11px] font-semibold uppercase tracking-wider text-dawn-gold">
             Miracle Morning S.A.V.E.R.S.
           </span>
-          <h2 className="text-xl font-extrabold tracking-tight text-white">Daily Rituals</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-white drop-shadow-sm">Daily Rituals</h2>
         </div>
         {completedCount > 0 && (
           <button
             onClick={onResetTodaySession}
-            className="flex items-center space-x-1 text-[11px] text-dawn-muted hover:text-white px-2.5 py-1 rounded-lg bg-dawn-surface border border-dawn-border"
+            className="flex items-center space-x-1 text-[11px] text-dawn-muted hover:text-white px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md"
             title="Reset today's ritual progress"
           >
             <RotateCcw className="w-3 h-3" />
@@ -87,7 +86,7 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
       </div>
 
       {/* Routine Presets Selector Bar */}
-      <div className="bg-dawn-card border border-dawn-border rounded-2xl p-3 space-y-2.5">
+      <div className="glass-card rounded-3xl p-4 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-white flex items-center space-x-1.5">
             <Clock className="w-3.5 h-3.5 text-dawn-gold" />
@@ -107,10 +106,10 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
             <button
               key={preset.id}
               onClick={() => setSelectedPreset(preset.id)}
-              className={`py-2 px-1 rounded-xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center ${
+              className={`py-2 px-1 rounded-2xl text-xs font-semibold border transition-all text-center flex flex-col items-center justify-center active:scale-95 ${
                 selectedPreset === preset.id
                   ? 'bg-dawn-gold text-dawn-dark border-dawn-gold shadow-gold-sm font-bold'
-                  : 'bg-dawn-surface border-dawn-border text-dawn-muted hover:text-white'
+                  : 'bg-white/[0.04] border-white/[0.08] text-dawn-muted hover:text-white'
               }`}
             >
               <span>{preset.id === 'custom' ? 'Custom' : `${preset.totalMinutes}m`}</span>
@@ -123,7 +122,7 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
 
         <button
           onClick={() => onStartFullRoutine(selectedPreset)}
-          className="w-full mt-2 py-3 bg-gradient-to-r from-dawn-gold to-dawn-gold-light hover:brightness-105 text-dawn-dark font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center space-x-2 shadow-gold-sm transition-transform active:scale-98 min-h-[44px]"
+          className="w-full mt-2 py-3.5 liquid-gold-button rounded-2xl flex items-center justify-center space-x-2 text-xs uppercase tracking-wider min-h-touch active:scale-98"
         >
           <Play className="w-4 h-4 fill-dawn-dark" />
           <span>
@@ -152,18 +151,18 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
               <div
                 key={ritualKey}
                 onClick={() => onOpenSingleRitual(ritualKey)}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group active:scale-[0.99] ${
+                className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group active:scale-[0.98] ${
                   isDone
-                    ? 'bg-dawn-card/90 border-dawn-gold/40 shadow-sm'
-                    : 'bg-dawn-card border-dawn-border hover:border-dawn-gold/30'
+                    ? 'glass-card border-dawn-gold/40 shadow-gold-sm'
+                    : 'glass-card glass-card-interactive'
                 }`}
               >
                 <div className="flex items-center space-x-3">
                   <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+                    className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${
                       isDone
-                        ? 'bg-dawn-gold/20 text-dawn-gold'
-                        : 'bg-dawn-surface text-dawn-muted group-hover:text-white'
+                        ? 'bg-dawn-gold/25 text-dawn-gold border border-dawn-gold/40 shadow-gold-sm'
+                        : 'bg-white/[0.05] border border-white/10 text-dawn-muted group-hover:text-white'
                     }`}
                   >
                     {isDone ? (
@@ -175,7 +174,7 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
                   <div>
                     <div className="flex items-center space-x-2">
                       <h4 className="text-xs font-bold text-white tracking-tight">{def.name}</h4>
-                      <span className="text-[10px] text-dawn-muted px-1.5 py-0.2 bg-dawn-surface rounded">
+                      <span className="text-[10px] text-dawn-muted px-1.5 py-0.2 bg-white/[0.06] border border-white/10 rounded-md">
                         {durationMin} min
                       </span>
                     </div>
@@ -187,15 +186,15 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
 
                 <div className="flex items-center space-x-1.5">
                   <span
-                    className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+                    className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold border ${
                       isDone
-                        ? 'bg-dawn-gold/15 text-dawn-gold border border-dawn-gold/30'
-                        : 'bg-dawn-surface text-slate-400 border border-dawn-border'
+                        ? 'bg-dawn-gold/20 text-dawn-gold border-dawn-gold/40 shadow-gold-sm'
+                        : 'bg-white/[0.05] text-slate-400 border-white/10'
                     }`}
                   >
                     {isDone ? 'Done ✓' : 'Start'}
                   </span>
-                  <ChevronRight className="w-4 h-4 text-dawn-muted group-hover:text-white" />
+                  <ChevronRight className="w-4 h-4 text-dawn-muted group-hover:text-white transition-transform group-hover:translate-x-0.5" />
                 </div>
               </div>
             );

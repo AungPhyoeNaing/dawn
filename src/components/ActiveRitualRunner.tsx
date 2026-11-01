@@ -12,23 +12,17 @@ import {
   Heart,
   ChevronLeft,
   ChevronRight,
-  BookOpen,
-  PenTool,
-  Flame,
-  Sparkles,
   Camera,
-  Image as ImageIcon,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import {
+import type {
   RitualType,
   Affirmation,
   VisualizationGoal,
-  JournalEntry,
 } from '../types';
 import { RITUAL_DEFINITIONS } from '../data/rituals';
 import {
-  TimerState,
+  type TimerState,
   createInitialTimerState,
   startTimer,
   pauseTimer,
@@ -193,7 +187,6 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
     const timeSpent = Math.max(1, elapsedSeconds);
     const today = getLocalDateString();
 
-    // Persist specific ritual logs
     try {
       if (ritualType === 'reading' && (bookTitle || readingNotes)) {
         await db.readingLogs.add({
@@ -240,17 +233,16 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
       console.error('Error saving ritual details:', err);
     }
 
-    // If last step or single ritual, fire confetti!
     if (!isSequence || sequenceStep === totalSequenceSteps) {
       try {
         confetti({
-          particleCount: 60,
-          spread: 70,
+          particleCount: 65,
+          spread: 75,
           origin: { y: 0.6 },
           colors: ['#F59E0B', '#FCD34D', '#10B981', '#38BDF8'],
         });
       } catch (e) {
-        // ignore in non-browser env
+        // ignore
       }
     }
 
@@ -291,7 +283,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
     setShowAddAffirmation(false);
   };
 
-  // Image upload for vision board (stored as base64 in IndexedDB)
+  // Image upload for vision board
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -321,11 +313,17 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-dawn-dark text-dawn-light flex flex-col pt-safe pb-safe overflow-y-auto animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-dawn-dark/95 backdrop-blur-3xl text-dawn-light flex flex-col pt-safe pb-safe overflow-y-auto animate-in fade-in duration-200">
+      {/* Liquid background orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-1/4 -right-24 w-80 h-80 rounded-full bg-dawn-gold/15 blur-[90px]" />
+        <div className="absolute bottom-1/4 -left-24 w-80 h-80 rounded-full bg-sky-500/10 blur-[90px]" />
+      </div>
+
       {/* Top Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-dawn-border/60 bg-dawn-surface/90 backdrop-blur-md sticky top-0 z-20">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-lg bg-dawn-gold/20 text-dawn-gold flex items-center justify-center font-bold text-sm">
+      <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-dawn-dark/60 backdrop-blur-2xl sticky top-0">
+        <div className="flex items-center space-x-2.5">
+          <div className="w-8 h-8 rounded-xl bg-dawn-gold/25 border border-dawn-gold/40 text-dawn-gold flex items-center justify-center font-bold text-sm shadow-gold-sm">
             {definition.shortName}
           </div>
           <div>
@@ -343,14 +341,14 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
         <div className="flex items-center space-x-1.5">
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className="p-2 rounded-full text-dawn-muted hover:text-white"
+            className="p-2 rounded-full text-dawn-muted hover:text-white bg-white/[0.05] border border-white/10"
             aria-label="Toggle bell sound"
           >
             {soundEnabled ? <Volume2 className="w-4 h-4 text-dawn-gold" /> : <VolumeX className="w-4 h-4" />}
           </button>
           <button
             onClick={onClose}
-            className="p-2 rounded-full bg-dawn-card text-dawn-muted hover:text-white"
+            className="p-2 rounded-full bg-white/[0.07] border border-white/10 text-dawn-muted hover:text-white"
             aria-label="Close ritual runner"
           >
             <X className="w-4 h-4" />
@@ -358,26 +356,24 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
         </div>
       </div>
 
-      <div className="p-4 max-w-md mx-auto w-full space-y-4 flex-1">
-        {/* TIMER HERO CIRCLE */}
-        <div className="bg-dawn-card border border-dawn-border rounded-3xl p-5 text-center relative overflow-hidden shadow-xl">
-          {/* Circular SVG Timer Ring */}
+      <div className="relative z-10 p-4 max-w-md mx-auto w-full space-y-4 flex-1">
+        {/* TIMER HERO LIQUID GLASS CIRCLE */}
+        <div className="glass-card rounded-3xl p-5 text-center relative overflow-hidden shadow-2xl">
+          {/* Circular SVG Timer Ring with Specular Glow */}
           <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-              {/* Background Ring */}
               <circle
                 cx="50"
                 cy="50"
                 r="42"
-                className="stroke-dawn-surface fill-transparent"
+                className="stroke-white/[0.08] fill-transparent"
                 strokeWidth="6"
               />
-              {/* Progress Ring */}
               <circle
                 cx="50"
                 cy="50"
                 r="42"
-                className="stroke-dawn-gold fill-transparent transition-all duration-300 ease-linear"
+                className="stroke-dawn-gold fill-transparent transition-all duration-300 ease-linear drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]"
                 strokeWidth="6"
                 strokeDasharray={264}
                 strokeDashoffset={264 - (264 * progressPct) / 100}
@@ -387,7 +383,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
             {/* Inner Timer Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-extrabold tracking-tight text-white font-mono">
+              <span className="text-3xl font-black tracking-tight text-white font-mono drop-shadow-[0_0_12px_rgba(255,255,255,0.3)]">
                 {formatSeconds(remainingSeconds)}
               </span>
               <span className="text-[11px] text-dawn-muted mt-0.5">
@@ -400,7 +396,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
           <div className="flex items-center justify-center space-x-3 mt-4">
             <button
               onClick={handleReset}
-              className="p-2.5 rounded-full bg-dawn-surface text-dawn-muted hover:text-white transition-colors min-h-touch min-w-touch flex items-center justify-center"
+              className="p-3 rounded-full bg-white/[0.06] border border-white/10 text-dawn-muted hover:text-white transition-colors min-h-touch min-w-touch flex items-center justify-center active:scale-95"
               aria-label="Reset timer"
             >
               <RotateCcw className="w-4 h-4" />
@@ -408,7 +404,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
             <button
               onClick={handleTogglePlay}
-              className="px-6 py-3 rounded-full bg-gradient-to-r from-dawn-gold to-dawn-gold-light text-dawn-dark font-bold text-sm flex items-center space-x-2 shadow-gold-sm transition-transform active:scale-95 min-h-touch"
+              className="px-7 py-3 rounded-2xl liquid-gold-button text-sm flex items-center space-x-2 min-h-touch active:scale-95"
             >
               {timer.isRunning ? (
                 <>
@@ -425,10 +421,10 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
             <button
               onClick={handleAddOneMinute}
-              className="px-2.5 py-1.5 rounded-full bg-dawn-surface border border-dawn-border text-xs text-dawn-gold font-medium hover:bg-dawn-card"
+              className="px-3 py-2 rounded-xl bg-white/[0.06] border border-white/10 text-xs text-dawn-gold font-bold hover:bg-white/[0.1] active:scale-95"
               aria-label="Add one minute"
             >
-              +1 min
+              +1m
             </button>
           </div>
         </div>
@@ -437,7 +433,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
         {/* 1. SILENCE */}
         {ritualType === 'silence' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 text-center space-y-3">
+          <div className="glass-card rounded-3xl p-4.5 text-center space-y-3">
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-wider text-dawn-gold">
                 Guided Silence Pacer
@@ -446,8 +442,8 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 {timer.isRunning ? `${silencePacerPhase} (${silencePacerSeconds}s)` : 'Start timer to begin breathing guide'}
               </h3>
             </div>
-            <div className="text-xs text-slate-300 bg-dawn-surface/60 rounded-xl p-3 border border-dawn-border text-left space-y-1">
-              <p className="font-medium text-white">Mindfulness Focus:</p>
+            <div className="text-xs text-slate-300 bg-white/[0.03] rounded-2xl p-3.5 border border-white/10 text-left space-y-1">
+              <p className="font-semibold text-white">Mindfulness Focus:</p>
               <p className="text-[11px] text-dawn-muted leading-relaxed">
                 Sit comfortably, lower your chin slightly, and observe the natural breath entering and leaving your nostrils.
               </p>
@@ -457,7 +453,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
         {/* 2. AFFIRMATIONS */}
         {ritualType === 'affirmations' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 space-y-3">
+          <div className="glass-card rounded-3xl p-4.5 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold tracking-wider text-dawn-gold">
                 Daily Affirmations ({currentAffirmationIndex + 1}/{Math.max(1, affirmations.length)})
@@ -472,23 +468,23 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             </div>
 
             {affirmations.length > 0 ? (
-              <div className="bg-dawn-surface p-4 rounded-xl border border-dawn-border space-y-3 min-h-[110px] flex flex-col justify-between">
+              <div className="bg-white/[0.04] p-4 rounded-2xl border border-white/10 space-y-3 min-h-[110px] flex flex-col justify-between backdrop-blur-md">
                 <p className="text-sm font-medium text-white leading-relaxed italic">
                   "{affirmations[currentAffirmationIndex]?.text}"
                 </p>
-                <div className="flex items-center justify-between pt-2 border-t border-dawn-border/50 text-xs">
-                  <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-dawn-card text-dawn-muted">
+                <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs">
+                  <span className="text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/[0.08] text-dawn-muted">
                     {affirmations[currentAffirmationIndex]?.category}
                   </span>
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleToggleFavoriteAffirmation(affirmations[currentAffirmationIndex])}
-                      className="p-1 text-dawn-muted hover:text-rose-400"
+                      className="p-1.5 text-dawn-muted hover:text-rose-400"
                     >
                       <Heart
                         className={`w-4 h-4 ${
                           affirmations[currentAffirmationIndex]?.isFavorite
-                            ? 'fill-rose-500 text-rose-500'
+                            ? 'fill-rose-500 text-rose-500 shadow-sm'
                             : ''
                         }`}
                       />
@@ -515,13 +511,13 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             )}
 
             {showAddAffirmation && (
-              <div className="p-3 bg-dawn-surface rounded-xl border border-dawn-border space-y-2">
+              <div className="p-3 bg-white/[0.05] rounded-2xl border border-white/10 space-y-2">
                 <input
                   type="text"
                   placeholder="I am capable, grounded, and..."
                   value={newAffirmationText}
                   onChange={(e) => setNewAffirmationText(e.target.value)}
-                  className="w-full bg-dawn-dark border border-dawn-border rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-dawn-dark border border-white/10 rounded-xl p-2.5 text-xs text-white"
                 />
                 <div className="flex justify-end space-x-2">
                   <button
@@ -532,7 +528,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                   </button>
                   <button
                     onClick={handleSaveCustomAffirmation}
-                    className="text-xs px-3 py-1 bg-dawn-gold text-dawn-dark font-semibold rounded-lg"
+                    className="text-xs px-3 py-1 liquid-gold-button rounded-xl"
                   >
                     Save
                   </button>
@@ -544,7 +540,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
         {/* 3. VISUALIZATION */}
         {ritualType === 'visualization' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 space-y-3">
+          <div className="glass-card rounded-3xl p-4.5 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase font-bold tracking-wider text-dawn-gold">
                 Vision Board ({currentVisionIndex + 1}/{Math.max(1, visualizations.length)})
@@ -559,12 +555,12 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             </div>
 
             {visualizations.length > 0 ? (
-              <div className="bg-dawn-surface p-4 rounded-xl border border-dawn-border space-y-3">
+              <div className="bg-white/[0.04] p-4 rounded-2xl border border-white/10 space-y-3 backdrop-blur-md">
                 {visualizations[currentVisionIndex]?.imageUrl && (
                   <img
                     src={visualizations[currentVisionIndex].imageUrl}
                     alt={visualizations[currentVisionIndex].title}
-                    className="w-full h-32 object-cover rounded-lg border border-dawn-border"
+                    className="w-full h-32 object-cover rounded-xl border border-white/10 shadow-md"
                   />
                 )}
                 <div>
@@ -576,7 +572,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-dawn-border/50">
+                <div className="flex items-center justify-between pt-2 border-t border-white/10">
                   <span className="text-[10px] text-dawn-muted uppercase">
                     Feel the emotions of already arriving
                   </span>
@@ -603,20 +599,20 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             )}
 
             {showAddVision && (
-              <div className="p-3 bg-dawn-surface rounded-xl border border-dawn-border space-y-2">
+              <div className="p-3 bg-white/[0.05] rounded-2xl border border-white/10 space-y-2">
                 <input
                   type="text"
                   placeholder="Vision Goal Title..."
                   value={newVisionTitle}
                   onChange={(e) => setNewVisionTitle(e.target.value)}
-                  className="w-full bg-dawn-dark border border-dawn-border rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-dawn-dark border border-white/10 rounded-xl p-2.5 text-xs text-white"
                 />
                 <textarea
                   placeholder="Describe your ideal vision vividly..."
                   rows={2}
                   value={newVisionDesc}
                   onChange={(e) => setNewVisionDesc(e.target.value)}
-                  className="w-full bg-dawn-dark border border-dawn-border rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-dawn-dark border border-white/10 rounded-xl p-2.5 text-xs text-white resize-none"
                 />
                 <div className="flex items-center justify-between">
                   <button
@@ -625,7 +621,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                     className="flex items-center space-x-1.5 text-xs text-slate-300 hover:text-white"
                   >
                     <Camera className="w-4 h-4 text-dawn-gold" />
-                    <span>{newVisionImage ? 'Image Selected' : 'Attach Photo'}</span>
+                    <span>{newVisionImage ? 'Image Attached' : 'Attach Photo'}</span>
                   </button>
                   <input
                     type="file"
@@ -643,7 +639,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                     </button>
                     <button
                       onClick={handleSaveVisionGoal}
-                      className="text-xs px-3 py-1 bg-dawn-gold text-dawn-dark font-semibold rounded-lg"
+                      className="text-xs px-3 py-1 liquid-gold-button rounded-xl"
                     >
                       Save Goal
                     </button>
@@ -656,7 +652,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
         {/* 4. EXERCISE */}
         {ritualType === 'exercise' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 space-y-3">
+          <div className="glass-card rounded-3xl p-4.5 space-y-3">
             <span className="text-[10px] uppercase font-bold tracking-wider text-dawn-gold">
               Movement & Vitality Log
             </span>
@@ -666,28 +662,28 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
               <select
                 value={exerciseActivity}
                 onChange={(e) => setExerciseActivity(e.target.value)}
-                className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
               >
-                <option value="Gentle Yoga & Stretching">Gentle Yoga & Stretching</option>
-                <option value="Calisthenics (Pushups/Squats)">Calisthenics (Pushups/Squats)</option>
-                <option value="Core & Abs Workout">Core & Abs Workout</option>
-                <option value="Brisk Morning Walk">Brisk Morning Walk</option>
-                <option value="HIIT / Cardio Blast">HIIT / Cardio Blast</option>
-                <option value="Free Weight Training">Free Weight Training</option>
+                <option value="Gentle Yoga & Stretching" className="bg-dawn-surface">Gentle Yoga & Stretching</option>
+                <option value="Calisthenics (Pushups/Squats)" className="bg-dawn-surface">Calisthenics (Pushups/Squats)</option>
+                <option value="Core & Abs Workout" className="bg-dawn-surface">Core & Abs Workout</option>
+                <option value="Brisk Morning Walk" className="bg-dawn-surface">Brisk Morning Walk</option>
+                <option value="HIIT / Cardio Blast" className="bg-dawn-surface">HIIT / Cardio Blast</option>
+                <option value="Free Weight Training" className="bg-dawn-surface">Free Weight Training</option>
               </select>
             </div>
 
             <div className="flex items-center justify-between">
               <span className="text-[11px] text-dawn-muted">Intensity:</span>
-              <div className="flex space-x-1">
+              <div className="flex space-x-1.5">
                 {(['gentle', 'moderate', 'intense'] as const).map((lvl) => (
                   <button
                     key={lvl}
                     onClick={() => setExerciseIntensity(lvl)}
-                    className={`text-[11px] px-2.5 py-1 rounded-lg border capitalize ${
+                    className={`text-[11px] px-2.5 py-1 rounded-xl border capitalize transition-all ${
                       exerciseIntensity === lvl
-                        ? 'bg-dawn-gold/20 border-dawn-gold text-dawn-gold font-medium'
-                        : 'bg-dawn-surface border-dawn-border text-dawn-muted'
+                        ? 'bg-dawn-gold/25 border-dawn-gold text-dawn-gold font-bold shadow-gold-sm'
+                        : 'bg-white/[0.04] border-white/10 text-dawn-muted'
                     }`}
                   >
                     {lvl}
@@ -701,14 +697,14 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
               placeholder="Notes (e.g. 30 pushups, 20 air squats)..."
               value={exerciseNotes}
               onChange={(e) => setExerciseNotes(e.target.value)}
-              className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white placeholder-slate-500"
+              className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white placeholder-slate-500"
             />
           </div>
         )}
 
         {/* 5. READING */}
         {ritualType === 'reading' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 space-y-3">
+          <div className="glass-card rounded-3xl p-4.5 space-y-3">
             <span className="text-[10px] uppercase font-bold tracking-wider text-dawn-gold">
               Reading Tracker
             </span>
@@ -721,7 +717,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                   placeholder="e.g. Atomic Habits"
                   value={bookTitle}
                   onChange={(e) => setBookTitle(e.target.value)}
-                  className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
                 />
               </div>
               <div className="space-y-1">
@@ -731,7 +727,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                   min="0"
                   value={pagesRead}
                   onChange={(e) => setPagesRead(Number(e.target.value))}
-                  className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white"
+                  className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white text-center"
                 />
               </div>
             </div>
@@ -743,7 +739,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 rows={2}
                 value={readingNotes}
                 onChange={(e) => setReadingNotes(e.target.value)}
-                className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white resize-none"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white resize-none"
               />
             </div>
           </div>
@@ -751,7 +747,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
         {/* 6. SCRIBING */}
         {ritualType === 'scribing' && (
-          <div className="bg-dawn-card border border-dawn-border rounded-2xl p-4 space-y-3">
+          <div className="glass-card rounded-3xl p-4.5 space-y-3">
             <span className="text-[10px] uppercase font-bold tracking-wider text-dawn-gold">
               Gratitude & Reflection Journal
             </span>
@@ -765,21 +761,21 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 placeholder="1. The peaceful silence of this morning..."
                 value={gratitude1}
                 onChange={(e) => setGratitude1(e.target.value)}
-                className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
               />
               <input
                 type="text"
                 placeholder="2. The strength in my body to begin again..."
                 value={gratitude2}
                 onChange={(e) => setGratitude2(e.target.value)}
-                className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
               />
               <input
                 type="text"
-                placeholder="3. A warm cup of water / fresh start..."
+                placeholder="3. A fresh start today..."
                 value={gratitude3}
                 onChange={(e) => setGratitude3(e.target.value)}
-                className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
               />
             </div>
 
@@ -792,7 +788,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 rows={2}
                 value={scribingReflection}
                 onChange={(e) => setScribingReflection(e.target.value)}
-                className="w-full bg-dawn-surface border border-dawn-border rounded-lg p-2 text-xs text-white resize-none"
+                className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white resize-none"
               />
             </div>
           </div>
@@ -803,7 +799,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
           {isSequence && (
             <button
               onClick={handleSkip}
-              className="flex-1 py-3 bg-dawn-surface hover:bg-dawn-card border border-dawn-border text-dawn-muted hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center space-x-1 min-h-[44px]"
+              className="flex-1 py-3 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 text-dawn-muted hover:text-white rounded-2xl text-xs font-semibold flex items-center justify-center space-x-1 min-h-[44px] active:scale-95"
             >
               <SkipForward className="w-3.5 h-3.5" />
               <span>Skip</span>
@@ -812,7 +808,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
           <button
             onClick={handleComplete}
-            className="flex-[2] py-3 bg-gradient-to-r from-dawn-gold to-dawn-gold-light hover:brightness-105 text-dawn-dark rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-1.5 shadow-gold-sm transition-transform active:scale-98 min-h-[44px]"
+            className="flex-[2] py-3.5 liquid-gold-button rounded-2xl text-xs uppercase tracking-wider flex items-center justify-center space-x-1.5 min-h-[44px] active:scale-98"
           >
             <CheckCircle2 className="w-4 h-4 fill-dawn-dark text-dawn-gold-light" />
             <span>

@@ -9,12 +9,9 @@ import {
   Upload,
   Shield,
   Smartphone,
-  Check,
-  Moon,
-  Sun,
-  AlertTriangle,
+  Sliders,
 } from 'lucide-react';
-import { UserSettings, RitualType } from '../types';
+import type { UserSettings, RitualType } from '../types';
 import { exportBackupFile, importBackupData } from '../utils/backup';
 import { db } from '../db/db';
 
@@ -35,7 +32,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const [userName, setUserName] = useState(settings.userName || '');
   const [soundEnabled, setSoundEnabled] = useState(settings.soundEnabled ?? true);
-  const [theme, setTheme] = useState(settings.theme || 'dark');
   const [preset, setPreset] = useState(settings.routinePreset || '30min');
   const [customDurations, setCustomDurations] = useState<Record<RitualType, number>>(
     settings.customDurations || {
@@ -56,7 +52,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const updated: Partial<UserSettings> = {
       userName,
       soundEnabled,
-      theme,
       routinePreset: preset,
       customDurations,
     };
@@ -86,11 +81,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-dawn-card border border-dawn-border rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-4 max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/75 backdrop-blur-xl animate-in fade-in duration-200">
+      <div className="glass-panel rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between pb-2 border-b border-dawn-border/60">
-          <h3 className="text-sm font-bold text-white">Preferences & Settings</h3>
+        <div className="flex items-center justify-between pb-2 border-b border-white/10">
+          <h3 className="text-sm font-bold text-white tracking-tight">Preferences & Settings</h3>
           <button
             onClick={onClose}
             className="p-1 rounded-full text-dawn-muted hover:text-white"
@@ -110,7 +105,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="e.g. Stephen"
-            className="w-full bg-dawn-surface border border-dawn-border rounded-xl p-2.5 text-xs text-white"
+            className="w-full bg-white/[0.05] border border-white/10 rounded-2xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-dawn-gold"
           />
         </div>
 
@@ -131,10 +126,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 key={p.id}
                 type="button"
                 onClick={() => setPreset(p.id as any)}
-                className={`py-2 px-2 rounded-xl text-xs border font-medium transition-all ${
+                className={`py-2 px-2 rounded-2xl text-xs border font-bold transition-all ${
                   preset === p.id
-                    ? 'bg-dawn-gold/25 border-dawn-gold text-dawn-gold'
-                    : 'bg-dawn-surface border-dawn-border text-dawn-muted'
+                    ? 'bg-dawn-gold text-dawn-dark border-dawn-gold shadow-gold-sm font-extrabold'
+                    : 'bg-white/[0.04] border-white/10 text-dawn-muted hover:text-white'
                 }`}
               >
                 {p.label}
@@ -145,14 +140,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
         {/* Custom Durations Editor (if custom selected) */}
         {preset === 'custom' && (
-          <div className="p-3 bg-dawn-surface rounded-xl border border-dawn-border space-y-2">
-            <span className="text-[11px] font-semibold text-dawn-gold uppercase">
+          <div className="p-3.5 bg-white/[0.04] rounded-2xl border border-white/10 space-y-2 backdrop-blur-md">
+            <span className="text-[11px] font-bold text-dawn-gold uppercase">
               Minutes Per Ritual:
             </span>
             <div className="grid grid-cols-2 gap-2 text-xs">
               {(Object.keys(customDurations) as RitualType[]).map((rit) => (
                 <div key={rit} className="flex items-center justify-between">
-                  <span className="capitalize text-slate-300 text-[11px]">{rit}:</span>
+                  <span className="capitalize text-slate-300 text-[11px] font-medium">{rit}:</span>
                   <input
                     type="number"
                     min="1"
@@ -164,7 +159,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         [rit]: Math.max(1, Number(e.target.value)),
                       })
                     }
-                    className="w-14 bg-dawn-card border border-dawn-border rounded p-1 text-center text-xs text-white"
+                    className="w-14 bg-white/[0.08] border border-white/15 rounded-xl p-1 text-center text-xs text-white font-mono"
                   />
                 </div>
               ))}
@@ -173,38 +168,38 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         )}
 
         {/* Sound Toggle */}
-        <div className="flex items-center justify-between p-3 bg-dawn-surface rounded-xl border border-dawn-border">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between p-3.5 bg-white/[0.04] rounded-2xl border border-white/10 backdrop-blur-md">
+          <div className="flex items-center space-x-2.5">
             {soundEnabled ? (
-              <Volume2 className="w-4 h-4 text-dawn-gold" />
+              <Volume2 className="w-4 h-4 text-dawn-gold drop-shadow-sm" />
             ) : (
               <VolumeX className="w-4 h-4 text-dawn-muted" />
             )}
-            <span className="text-xs text-slate-300">Meditation Singing Bowl Chimes</span>
+            <span className="text-xs text-slate-300 font-medium">Tibetan Singing Bowl Bell</span>
           </div>
           <button
             type="button"
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className={`w-10 h-6 rounded-full p-1 transition-colors ${
-              soundEnabled ? 'bg-dawn-gold' : 'bg-dawn-border'
+            className={`w-11 h-6 rounded-full p-1 transition-colors ${
+              soundEnabled ? 'bg-dawn-gold shadow-gold-sm' : 'bg-white/10'
             }`}
           >
             <div
               className={`w-4 h-4 rounded-full bg-dawn-dark transition-transform ${
-                soundEnabled ? 'translate-x-4' : 'translate-x-0'
+                soundEnabled ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
           </button>
         </div>
 
         {/* Data Backup & Restore */}
-        <div className="space-y-2 pt-1 border-t border-dawn-border/60">
+        <div className="space-y-2 pt-1 border-t border-white/10">
           <span className="text-xs font-semibold text-slate-300">Data Management:</span>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={exportBackupFile}
-              className="p-2.5 bg-dawn-surface hover:bg-dawn-card border border-dawn-border rounded-xl text-xs font-medium flex items-center justify-center space-x-1.5 text-slate-200"
+              className="p-2.5 bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 rounded-2xl text-xs font-medium flex items-center justify-center space-x-1.5 text-slate-200 backdrop-blur-md active:scale-95"
             >
               <Download className="w-3.5 h-3.5 text-dawn-gold" />
               <span>Export JSON</span>
@@ -213,7 +208,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="p-2.5 bg-dawn-surface hover:bg-dawn-card border border-dawn-border rounded-xl text-xs font-medium flex items-center justify-center space-x-1.5 text-slate-200"
+              className="p-2.5 bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 rounded-2xl text-xs font-medium flex items-center justify-center space-x-1.5 text-slate-200 backdrop-blur-md active:scale-95"
             >
               <Upload className="w-3.5 h-3.5 text-dawn-gold" />
               <span>Import JSON</span>
@@ -227,7 +222,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             />
           </div>
           {importStatus && (
-            <p className="text-[11px] text-emerald-400 text-center">{importStatus}</p>
+            <p className="text-[11px] text-emerald-400 text-center font-medium">{importStatus}</p>
           )}
         </div>
 
@@ -238,16 +233,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             onClose();
             onOpenIOSGuide();
           }}
-          className="w-full p-2.5 bg-dawn-surface hover:bg-dawn-card border border-dawn-border rounded-xl text-xs text-slate-300 flex items-center justify-center space-x-1.5"
+          className="w-full p-2.5 bg-white/[0.05] hover:bg-white/[0.09] border border-white/10 rounded-2xl text-xs text-slate-300 flex items-center justify-center space-x-2 backdrop-blur-md active:scale-98"
         >
           <Smartphone className="w-3.5 h-3.5 text-dawn-gold" />
           <span>iPhone SE PWA Installation Guide</span>
         </button>
 
         {/* Privacy Note */}
-        <div className="p-3 bg-dawn-surface/50 rounded-xl border border-dawn-border/50 text-[10px] text-dawn-muted space-y-1">
-          <div className="flex items-center space-x-1 text-slate-300 font-semibold">
-            <Shield className="w-3 h-3 text-emerald-400" />
+        <div className="p-3.5 bg-white/[0.03] rounded-2xl border border-white/5 text-[10px] text-dawn-muted space-y-1">
+          <div className="flex items-center space-x-1.5 text-slate-300 font-semibold">
+            <Shield className="w-3.5 h-3.5 text-emerald-400" />
             <span>100% Client-Side Privacy</span>
           </div>
           <p>
@@ -259,7 +254,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <button
           type="button"
           onClick={handleSave}
-          className="w-full py-3 bg-gradient-to-r from-dawn-gold to-dawn-gold-light text-dawn-dark font-bold text-xs uppercase tracking-wider rounded-xl shadow-gold-sm transition-transform active:scale-98 min-h-[44px]"
+          className="w-full py-3.5 liquid-gold-button text-xs uppercase tracking-wider rounded-2xl min-h-[44px] active:scale-98"
         >
           Save Preferences
         </button>
