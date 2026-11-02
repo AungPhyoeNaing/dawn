@@ -43,7 +43,7 @@ export const IOSInstallBanner: React.FC<IOSInstallBannerProps> = ({ onDismissFor
   }
 
   return (
-    <div className="fixed inset-x-3 bottom-20 z-50 animate-in fade-in slide-in-from-bottom duration-300">
+    <div className="ios-install-banner fixed inset-x-3 bottom-20 z-50 animate-in fade-in slide-in-from-bottom duration-300">
       <div className="bg-dawn-card/95 backdrop-blur-xl border border-dawn-gold/30 rounded-2xl p-4 shadow-2xl max-w-sm mx-auto text-dawn-light">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-2.5">

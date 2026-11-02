@@ -1,0 +1,66 @@
+[
+  {
+    "tab": "Home",
+    "width": 375,
+    "height": 500,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 371
+  },
+  {
+    "tab": "Rituals",
+    "width": 375,
+    "height": 500,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 371
+  },
+  {
+    "tab": "Focus",
+    "width": 375,
+    "height": 500,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 371
+  },
+  {
+    "tab": "Progress",
+    "width": 375,
+    "height": 500,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 371
+  },
+  {
+    "tab": "Home",
+    "width": 667,
+    "height": 375,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 663
+  },
+  {
+    "tab": "Rituals",
+    "width": 667,
+    "height": 375,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 663
+  },
+  {
+    "tab": "Focus",
+    "width": 667,
+    "height": 375,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 663
+  },
+  {
+    "tab": "Progress",
+    "width": 667,
+    "height": 375,
+    "navHeight": 59.83333587646485,
+    "overflow": false,
+    "pageWidth": 663
+  }
+]

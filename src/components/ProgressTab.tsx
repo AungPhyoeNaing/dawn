@@ -1,3 +1,4 @@
+import { Modal } from './Modal';
 import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
@@ -128,7 +129,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
   });
 
   return (
-    <div className="space-y-4 pb-4 animate-in fade-in duration-200">
+    <div className="progress-tab space-y-4 pb-4 animate-in fade-in duration-200">
       {/* Header */}
       <div className="flex items-center justify-between pt-1">
         <div>
@@ -140,7 +141,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
       </div>
 
       {/* Overview Stats Row */}
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="progress-summary grid grid-cols-2 gap-2.5">
         <div className="glass-card rounded-2xl p-3.5 flex items-center space-x-3">
           <div className="w-10 h-10 rounded-2xl bg-dawn-gold/15 border border-dawn-gold/30 text-dawn-gold flex items-center justify-center shrink-0 shadow-gold-sm">
             <Flame className="w-5 h-5 fill-dawn-gold/20" />
@@ -163,9 +164,9 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
       </div>
 
       {/* MONTHLY CALENDAR CARD */}
-      <div className="glass-card rounded-3xl p-4.5 space-y-3.5 shadow-xl">
+      <div className="calendar-panel glass-card rounded-3xl p-4.5 space-y-3.5 shadow-xl">
         {/* Calendar Mode Switcher */}
-        <div className="flex items-center justify-between">
+        <div className="calendar-controls">
           <div className="flex space-x-1 p-1 bg-white/[0.04] rounded-2xl border border-white/10 text-xs backdrop-blur-md">
             <button
               onClick={() => setCalendarMode('rituals')}
@@ -191,6 +192,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
 
           {calendarMode === 'discipline' && (
             <select
+              aria-label="Discipline goal"
               value={selectedGoalId}
               onChange={(e) => setSelectedGoalId(e.target.value)}
               className="bg-white/[0.06] border border-white/10 rounded-xl text-xs p-1.5 text-white max-w-[120px] truncate backdrop-blur-md"
@@ -235,7 +237,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
         </div>
 
         {/* Calendar Matrix */}
-        <div className="grid grid-cols-7 gap-1.5 text-center">
+        <div className="calendar-grid grid grid-cols-7 gap-1.5 text-center">
           {monthGrid.flat().map((cell, idx) => {
             const isTodayDate = cell.dateStr === todayStr;
 
@@ -250,6 +252,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
             return (
               <button
                 key={idx}
+                aria-label={formatDateFull(cell.dateStr)}
                 onClick={() => setSelectedDateDetails(cell.dateStr)}
                 disabled={!cell.isCurrentMonth}
                 className={`py-2 rounded-2xl flex flex-col items-center justify-center relative transition-all min-h-[38px] active:scale-95 ${
@@ -375,6 +378,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
         <div className="relative">
           <Search className="w-3.5 h-3.5 text-dawn-muted absolute left-3.5 top-3" />
           <input
+            aria-label="Search journal entries"
             type="text"
             placeholder="Search reflections or gratitudes..."
             value={searchQuery}
@@ -384,7 +388,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
         </div>
 
         {/* Journal Entries List */}
-        <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+        <div className="journal-entries space-y-2.5 pr-1">
           {filteredJournals.length > 0 ? (
             filteredJournals.map((entry) => (
               <div
@@ -441,7 +445,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
 
       {/* EDIT ENTRY MODAL */}
       {editingEntry && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/75 backdrop-blur-xl animate-in fade-in duration-200">
+        <Modal label="Edit journal entry" onClose={() => setEditingEntry(null)}>
           <div className="glass-panel rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-3.5 shadow-2xl">
             <h3 className="text-sm font-bold text-white tracking-tight">
               Edit Journal ({formatDateFriendly(editingEntry.date)})
@@ -510,7 +514,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

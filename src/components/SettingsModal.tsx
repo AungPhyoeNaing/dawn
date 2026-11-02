@@ -1,3 +1,4 @@
+import { Modal } from './Modal';
 import React, { useState, useRef } from 'react';
 import {
   X,
@@ -81,13 +82,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/75 backdrop-blur-xl animate-in fade-in duration-200">
+    <Modal label="Settings" onClose={onClose}>
       <div className="glass-panel rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10">
           <h3 className="text-sm font-bold text-white tracking-tight">Preferences & Settings</h3>
           <button
             onClick={onClose}
+            aria-label="Close settings"
             className="p-1 rounded-full text-dawn-muted hover:text-white"
           >
             <X className="w-4 h-4" />
@@ -101,6 +103,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <span>Your Name / Persona:</span>
           </label>
           <input
+            aria-label="Your name"
+            autoComplete="given-name"
             type="text"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
@@ -144,11 +148,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <span className="text-[11px] font-bold text-dawn-gold uppercase">
               Minutes Per Ritual:
             </span>
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="custom-durations grid grid-cols-2 gap-2 text-xs">
               {(Object.keys(customDurations) as RitualType[]).map((rit) => (
                 <div key={rit} className="flex items-center justify-between">
                   <span className="capitalize text-slate-300 text-[11px] font-medium">{rit}:</span>
                   <input
+                    aria-label={`${rit} duration in minutes`}
+                    inputMode="numeric"
                     type="number"
                     min="1"
                     max="60"
@@ -179,8 +185,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
           <button
             type="button"
+            role="switch"
+            aria-checked={soundEnabled}
+            aria-label="Singing bowl sound"
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className={`w-11 h-6 rounded-full p-1 transition-colors ${
+            className={`sound-toggle w-11 h-6 rounded-full p-1 transition-colors ${
               soundEnabled ? 'bg-dawn-gold shadow-gold-sm' : 'bg-white/10'
             }`}
           >
@@ -259,6 +268,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           Save Preferences
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };

@@ -1,3 +1,4 @@
+import { Modal } from './Modal';
 import React, { useState } from 'react';
 import { X, Heart, Sparkles } from 'lucide-react';
 import { TRIGGER_OPTIONS } from '../data/support';
@@ -38,7 +39,7 @@ export const ConstructiveRestartModal: React.FC<ConstructiveRestartModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/75 backdrop-blur-xl animate-in fade-in duration-200">
+    <Modal label="Constructive restart" onClose={onClose}>
       <div className="glass-panel rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-2.5">
@@ -52,6 +53,7 @@ export const ConstructiveRestartModal: React.FC<ConstructiveRestartModalProps> =
           </div>
           <button
             onClick={onClose}
+            aria-label="Close restart dialog"
             className="p-1 rounded-full text-dawn-muted hover:text-white"
           >
             <X className="w-4 h-4" />
@@ -124,6 +126,6 @@ export const ConstructiveRestartModal: React.FC<ConstructiveRestartModalProps> =
           </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 };

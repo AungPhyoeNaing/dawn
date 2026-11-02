@@ -1,3 +1,4 @@
+import { Modal } from './Modal';
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -78,7 +79,7 @@ export const SupportModal: React.FC<SupportModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-dawn-dark/95 backdrop-blur-3xl text-dawn-light overflow-y-auto pt-safe pb-safe animate-in fade-in duration-200">
+    <Modal label="Support" onClose={onClose} fullScreen>
       {/* Liquid background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-1/4 -right-20 w-80 h-80 rounded-full bg-rose-500/15 blur-[90px]" />
@@ -361,6 +362,6 @@ export const SupportModal: React.FC<SupportModalProps> = ({
           Return to My Day, Grounded & Centered
         </button>
       </div>
-    </div>
+    </Modal>
   );
 };

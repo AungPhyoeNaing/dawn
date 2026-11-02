@@ -9,21 +9,21 @@ export default {
     extend: {
       colors: {
         dawn: {
-          dark: '#060913',      // Deep midnight liquid base
-          surface: '#0B1120',   // Rich navy surface
-          card: '#111A2E',      // Elevated glass card
+          dark: '#101a29',      // Deep midnight liquid base
+          surface: '#172437',   // Rich navy surface
+          card: '#1c2d42',      // Elevated glass card
           cardHover: '#182542',
           border: 'rgba(255, 255, 255, 0.08)', // Subtle liquid glass border
-          muted: '#8FA0BD',     // Secondary slate text
+          muted: '#a9b7c9',     // Secondary slate text
           light: '#F8FAFC',
           gold: {
-            DEFAULT: '#F59E0B', // Sunrise warm gold
+            DEFAULT: '#e9be78', // Sunrise warm gold
             light: '#FDE68A',
             dark: '#D97706',
             hover: '#FBBF24',
             glow: 'rgba(245, 158, 11, 0.35)',
           },
-          amber: '#F59E0B',
+          amber: '#e9be78',
           rose: '#F43F5E',
           sky: '#38BDF8',
           emerald: '#10B981',
@@ -34,7 +34,7 @@ export default {
         'xs': '375px', // iPhone SE target breakpoint
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif'],
+        sans: ['Trebuchet MS', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif'],
       },
       spacing: {
         'safe-top': 'env(safe-area-inset-top, 0px)',

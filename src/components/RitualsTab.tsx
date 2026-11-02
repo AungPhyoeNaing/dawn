@@ -148,16 +148,18 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
             const durationMin = currentPresetDef.durations[ritualKey] || def.defaultMinutes;
 
             return (
-              <div
+              <button
+                type="button"
+                aria-label={`Practice ${def.name}`}
                 key={ritualKey}
                 onClick={() => onOpenSingleRitual(ritualKey)}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group active:scale-[0.98] ${
+                className={`ritual-row w-full text-left p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group active:scale-[0.98] ${
                   isDone
                     ? 'glass-card border-dawn-gold/40 shadow-gold-sm'
                     : 'glass-card glass-card-interactive'
                 }`}
               >
-                <div className="flex items-center space-x-3">
+                <div className="ritual-row-content flex items-center space-x-3">
                   <div
                     className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${
                       isDone
@@ -184,7 +186,7 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-1.5">
+                <div className="ritual-row-action flex items-center space-x-1.5">
                   <span
                     className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold border ${
                       isDone
@@ -196,7 +198,7 @@ export const RitualsTab: React.FC<RitualsTabProps> = ({
                   </span>
                   <ChevronRight className="w-4 h-4 text-dawn-muted group-hover:text-white transition-transform group-hover:translate-x-0.5" />
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>

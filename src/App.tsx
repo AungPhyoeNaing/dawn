@@ -1,3 +1,4 @@
+import { Modal } from './components/Modal';
 import React, { useState, useEffect, useCallback } from 'react';
 import type {
   RitualType,
@@ -24,6 +25,10 @@ import { IOSInstallBanner } from './components/IOSInstallBanner';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
+  const switchTab = (tab: TabType) => {
+    setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
   const [settings, setSettings] = useState<UserSettings>({
     userName: 'Friend',
     theme: 'dark',
@@ -277,19 +282,7 @@ export function App() {
   );
 
   return (
-    <div className="relative min-h-screen bg-dawn-dark text-dawn-light flex flex-col font-sans selection:bg-dawn-gold selection:text-dawn-dark overflow-x-hidden">
-      {/* LIQUID AMBIENT BACKGROUND ORBS */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Top Sunrise Gold Liquid Orb */}
-        <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-dawn-gold/25 via-dawn-gold/10 to-transparent blur-[85px] animate-liquid-slow" />
-        
-        {/* Mid-Left Oceanic Sky Liquid Orb */}
-        <div className="absolute top-1/3 -left-28 w-80 h-80 rounded-full bg-gradient-to-tr from-sky-500/18 via-indigo-600/10 to-transparent blur-[95px] animate-liquid-pulse" />
-        
-        {/* Bottom Celestial Rose/Violet Liquid Orb */}
-        <div className="absolute bottom-16 right-[-10%] w-72 h-72 rounded-full bg-gradient-to-tl from-dawn-rose/15 via-purple-600/10 to-transparent blur-[90px] animate-liquid-slow" />
-      </div>
-
+    <div className="app-shell">
       {/* Sticky Header with SOS and Settings */}
       <Header
         onOpenSupport={() => setIsSupportOpen(true)}
@@ -299,9 +292,11 @@ export function App() {
       />
 
       {/* Main Content Area — Mobile First (375px primary, responsive up to tablet/desktop) */}
-      <main className="relative z-10 flex-1 w-full max-w-lg mx-auto px-3.5 pt-3 pb-nav transition-all">
+      <main className="app-main">
         {activeTab === 'home' && (
           <HomeTab
+            allSessions={allSessions}
+            routineMinutes={settings.routinePreset === 'custom' ? Object.values(settings.customDurations).reduce((a, b) => a + b, 0) : (ROUTINE_PRESETS[settings.routinePreset]?.totalMinutes ?? 30)}
             userName={settings.userName}
             todaySession={todaySession}
             disciplineGoals={disciplineGoals}
@@ -310,7 +305,7 @@ export function App() {
             onStartRitualSequence={() => handleStartFullRoutine(settings.routinePreset || '30min')}
             onOpenRitual={handleOpenSingleRitual}
             onOpenSupport={() => setIsSupportOpen(true)}
-            onSwitchTab={(tab) => setActiveTab(tab)}
+            onSwitchTab={switchTab}
             onQuickCheckin={handleQuickCheckin}
           />
         )}
@@ -353,7 +348,7 @@ export function App() {
       {/* Fixed Bottom Navigation Bar with Safe Area Inset & Liquid Glass Frosted Sheen */}
       <BottomNav
         activeTab={activeTab}
-        onChangeTab={setActiveTab}
+        onChangeTab={switchTab}
         ritualsProgressPct={ritualsProgressPct}
       />
 
@@ -418,7 +413,7 @@ export function App() {
 
       {/* Explicit iOS Guide Modal if triggered from settings */}
       {showIOSGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xl animate-in fade-in duration-200">
+        <Modal label="Install on iPhone" onClose={() => setShowIOSGuide(false)}>
           <div className="glass-panel rounded-3xl p-5 max-w-sm w-full text-dawn-light space-y-3 shadow-2xl">
             <h3 className="text-sm font-bold text-white tracking-tight">How to Install on iPhone SE</h3>
             <div className="space-y-2 text-xs text-slate-300 bg-white/[0.04] p-3.5 rounded-2xl border border-white/10 backdrop-blur-md">
@@ -437,7 +432,7 @@ export function App() {
               Close Guide
             </button>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

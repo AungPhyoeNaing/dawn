@@ -1,0 +1,191 @@
+{
+  "finalChecks": [
+    {
+      "tab": "Home",
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0,
+      "viewport": [
+        375,
+        667
+      ]
+    },
+    {
+      "tab": "Rituals",
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0,
+      "viewport": [
+        375,
+        667
+      ]
+    },
+    {
+      "tab": "Focus",
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0,
+      "viewport": [
+        375,
+        667
+      ]
+    },
+    {
+      "tab": "Progress",
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0,
+      "viewport": [
+        375,
+        667
+      ]
+    }
+  ],
+  "sizeChecks": [
+    {
+      "tab": "Home",
+      "width": 320,
+      "overflow": [],
+      "pageWidth": 315,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Rituals",
+      "width": 320,
+      "overflow": [],
+      "pageWidth": 315,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Focus",
+      "width": 320,
+      "overflow": [],
+      "pageWidth": 315,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Progress",
+      "width": 320,
+      "overflow": [],
+      "pageWidth": 315,
+      "smallButtons": 30
+    },
+    {
+      "tab": "Home",
+      "width": 375,
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Rituals",
+      "width": 375,
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Focus",
+      "width": 375,
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Progress",
+      "width": 375,
+      "overflow": [],
+      "pageWidth": 371,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Home",
+      "width": 390,
+      "overflow": [],
+      "pageWidth": 385,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Rituals",
+      "width": 390,
+      "overflow": [],
+      "pageWidth": 385,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Focus",
+      "width": 390,
+      "overflow": [],
+      "pageWidth": 385,
+      "smallButtons": 0
+    },
+    {
+      "tab": "Progress",
+      "width": 390,
+      "overflow": [],
+      "pageWidth": 385,
+      "smallButtons": 0
+    }
+  ],
+  "ritualChecks": [
+    {
+      "ritual": "Affirmations",
+      "overflow": [],
+      "shortButtons": [],
+      "smallInputs": 0
+    },
+    {
+      "ritual": "Visualization",
+      "overflow": [],
+      "shortButtons": [],
+      "smallInputs": 0
+    },
+    {
+      "ritual": "Exercise",
+      "inputFonts": [
+        "16px",
+        "16px"
+      ],
+      "overflow": [],
+      "shortButtons": []
+    },
+    {
+      "ritual": "Reading",
+      "inputFonts": [
+        "16px",
+        "16px",
+        "16px"
+      ],
+      "overflow": [],
+      "shortButtons": []
+    },
+    {
+      "ritual": "Scribing",
+      "inputFonts": [
+        "16px",
+        "16px",
+        "16px",
+        "16px"
+      ],
+      "overflow": [],
+      "shortButtons": []
+    }
+  ],
+  "supportChecks": [
+    {
+      "section": "5-4-3-2-1",
+      "overflow": [],
+      "smallTargets": []
+    },
+    {
+      "section": "Actions",
+      "overflow": [],
+      "smallTargets": []
+    },
+    {
+      "section": "Reflect",
+      "overflow": [],
+      "smallTargets": []
+    }
+  ]
+}

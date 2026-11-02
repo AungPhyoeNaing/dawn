@@ -1,3 +1,4 @@
+import { Modal } from './Modal';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
@@ -313,7 +314,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-dawn-dark/95 backdrop-blur-3xl text-dawn-light flex flex-col pt-safe pb-safe overflow-y-auto animate-in fade-in duration-200">
+    <Modal label="Ritual practice" onClose={onClose} fullScreen>
       {/* Liquid background orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-1/4 -right-24 w-80 h-80 rounded-full bg-dawn-gold/15 blur-[90px]" />
@@ -321,7 +322,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
       </div>
 
       {/* Top Header */}
-      <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-dawn-dark/60 backdrop-blur-2xl sticky top-0">
+      <div className="runner-header relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/[0.08] bg-dawn-dark/60 backdrop-blur-2xl sticky top-0">
         <div className="flex items-center space-x-2.5">
           <div className="w-8 h-8 rounded-xl bg-dawn-gold/25 border border-dawn-gold/40 text-dawn-gold flex items-center justify-center font-bold text-sm shadow-gold-sm">
             {definition.shortName}
@@ -333,7 +334,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 Step {sequenceStep} of {totalSequenceSteps} in Miracle Morning
               </span>
             ) : (
-              <span className="text-[10px] text-dawn-muted">{definition.tagline}</span>
+              <span className="runner-tagline text-[10px] text-dawn-muted">{definition.tagline}</span>
             )}
           </div>
         </div>
@@ -393,7 +394,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
           </div>
 
           {/* Quick Timer Controls */}
-          <div className="flex items-center justify-center space-x-3 mt-4">
+          <div className="timer-controls flex items-center justify-center space-x-3 mt-4">
             <button
               onClick={handleReset}
               className="p-3 rounded-full bg-white/[0.06] border border-white/10 text-dawn-muted hover:text-white transition-colors min-h-touch min-w-touch flex items-center justify-center active:scale-95"
@@ -478,6 +479,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                   </span>
                   <div className="flex items-center space-x-2">
                     <button
+                      aria-label="Toggle favorite affirmation"
                       onClick={() => handleToggleFavoriteAffirmation(affirmations[currentAffirmationIndex])}
                       className="p-1.5 text-dawn-muted hover:text-rose-400"
                     >
@@ -492,11 +494,12 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                     <button
                       disabled={currentAffirmationIndex === 0}
                       onClick={() => setCurrentAffirmationIndex((i) => Math.max(0, i - 1))}
-                      className="p-1 text-dawn-muted disabled:opacity-20"
+                      className="p-1 text-dawn-muted disabled:opacity-20" aria-label="Previous affirmation"
                     >
-                      <ChevronLeft className="w-4 h-4" />
+                      <ChevronLeft aria-hidden="true" className="w-4 h-4" />
                     </button>
                     <button
+                      aria-label="Next affirmation"
                       disabled={currentAffirmationIndex >= affirmations.length - 1}
                       onClick={() => setCurrentAffirmationIndex((i) => Math.min(affirmations.length - 1, i + 1))}
                       className="p-1 text-dawn-muted disabled:opacity-20"
@@ -515,7 +518,8 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 <input
                   type="text"
                   placeholder="I am capable, grounded, and..."
-                  value={newAffirmationText}
+                  aria-label="New affirmation"
+                value={newAffirmationText}
                   onChange={(e) => setNewAffirmationText(e.target.value)}
                   className="w-full bg-dawn-dark border border-white/10 rounded-xl p-2.5 text-xs text-white"
                 />
@@ -578,13 +582,15 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                   </span>
                   <div className="flex items-center space-x-2">
                     <button
+                      aria-label="Previous visualization"
                       disabled={currentVisionIndex === 0}
                       onClick={() => setCurrentVisionIndex((i) => Math.max(0, i - 1))}
                       className="p-1 text-dawn-muted disabled:opacity-20"
                     >
-                      <ChevronLeft className="w-4 h-4" />
+                      <ChevronLeft aria-hidden="true" className="w-4 h-4" />
                     </button>
                     <button
+                      aria-label="Next visualization"
                       disabled={currentVisionIndex >= visualizations.length - 1}
                       onClick={() => setCurrentVisionIndex((i) => Math.min(visualizations.length - 1, i + 1))}
                       className="p-1 text-dawn-muted disabled:opacity-20"
@@ -603,13 +609,15 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 <input
                   type="text"
                   placeholder="Vision Goal Title..."
-                  value={newVisionTitle}
+                  aria-label="Visualization title"
+                value={newVisionTitle}
                   onChange={(e) => setNewVisionTitle(e.target.value)}
                   className="w-full bg-dawn-dark border border-white/10 rounded-xl p-2.5 text-xs text-white"
                 />
                 <textarea
                   placeholder="Describe your ideal vision vividly..."
                   rows={2}
+                  aria-label="Visualization description"
                   value={newVisionDesc}
                   onChange={(e) => setNewVisionDesc(e.target.value)}
                   className="w-full bg-dawn-dark border border-white/10 rounded-xl p-2.5 text-xs text-white resize-none"
@@ -658,8 +666,9 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             </span>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] text-dawn-muted">Activity Type:</label>
+              <label htmlFor="exercise-activity" className="text-[11px] text-dawn-muted">Activity Type:</label>
               <select
+                id="exercise-activity"
                 value={exerciseActivity}
                 onChange={(e) => setExerciseActivity(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
@@ -695,7 +704,8 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             <input
               type="text"
               placeholder="Notes (e.g. 30 pushups, 20 air squats)..."
-              value={exerciseNotes}
+              aria-label="Exercise notes"
+                value={exerciseNotes}
               onChange={(e) => setExerciseNotes(e.target.value)}
               className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white placeholder-slate-500"
             />
@@ -711,8 +721,9 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
 
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2 space-y-1">
-                <label className="text-[11px] text-dawn-muted">Book / Article:</label>
+                <label htmlFor="reading-title" className="text-[11px] text-dawn-muted">Book / Article:</label>
                 <input
+                id="reading-title"
                   type="text"
                   placeholder="e.g. Atomic Habits"
                   value={bookTitle}
@@ -721,8 +732,9 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[11px] text-dawn-muted">Pages Read:</label>
+                <label htmlFor="reading-pages" className="text-[11px] text-dawn-muted">Pages Read:</label>
                 <input
+                id="reading-pages"
                   type="number"
                   min="0"
                   value={pagesRead}
@@ -733,8 +745,9 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
             </div>
 
             <div className="space-y-1">
-              <label className="text-[11px] text-dawn-muted">Key Takeaway / Insight:</label>
+              <label htmlFor="reading-insight" className="text-[11px] text-dawn-muted">Key Takeaway / Insight:</label>
               <textarea
+                id="reading-insight"
                 placeholder="What one idea from today's reading will you apply?"
                 rows={2}
                 value={readingNotes}
@@ -759,6 +772,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
               <input
                 type="text"
                 placeholder="1. The peaceful silence of this morning..."
+                aria-label="First gratitude"
                 value={gratitude1}
                 onChange={(e) => setGratitude1(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
@@ -766,6 +780,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
               <input
                 type="text"
                 placeholder="2. The strength in my body to begin again..."
+                aria-label="Second gratitude"
                 value={gratitude2}
                 onChange={(e) => setGratitude2(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
@@ -773,6 +788,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
               <input
                 type="text"
                 placeholder="3. A fresh start today..."
+                aria-label="Third gratitude"
                 value={gratitude3}
                 onChange={(e) => setGratitude3(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white"
@@ -786,6 +802,7 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
               <textarea
                 placeholder="Today, my primary focus is..."
                 rows={2}
+                aria-label="Daily reflection"
                 value={scribingReflection}
                 onChange={(e) => setScribingReflection(e.target.value)}
                 className="w-full bg-white/[0.05] border border-white/10 rounded-xl p-2.5 text-xs text-white resize-none"
@@ -819,6 +836,6 @@ export const ActiveRitualRunner: React.FC<ActiveRitualRunnerProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };

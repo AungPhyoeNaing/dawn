@@ -1,29 +1,16 @@
 import React, { useState } from 'react';
-import {
-  Sparkles,
-  Flame,
-  Shield,
-  ArrowRight,
-  ShieldAlert,
-  RotateCw,
-  CheckCircle2,
-  Calendar,
-} from 'lucide-react';
-import type {
-  RitualSession,
-  DisciplineGoal,
-  DisciplineCheckin,
-  DisciplineRelapse,
-  RitualType,
-} from '../types';
+import { ArrowRight, BookOpen, Check, ChevronRight, Eye, HeartHandshake, Leaf, Moon, PenLine, Play, RotateCw, Shield, Sparkles, Sunrise } from 'lucide-react';
+import type { RitualSession, DisciplineGoal, DisciplineCheckin, DisciplineRelapse, RitualType } from '../types';
 import { RITUAL_DEFINITIONS } from '../data/rituals';
 import { getContextualMotivation, getRandomMotivation } from '../data/motivation';
 import { calculateStreakStats } from '../utils/discipline';
-import { formatDateFriendly, getLocalDateString, getPastNDays } from '../utils/date';
+import { getLocalDateString, getPastNDays } from '../utils/date';
 
 interface HomeTabProps {
   userName: string;
   todaySession: RitualSession | null;
+  allSessions: RitualSession[];
+  routineMinutes: number;
   disciplineGoals: DisciplineGoal[];
   disciplineRelapses: DisciplineRelapse[];
   disciplineCheckins: DisciplineCheckin[];
@@ -33,286 +20,75 @@ interface HomeTabProps {
   onSwitchTab: (tab: 'rituals' | 'focus' | 'progress') => void;
   onQuickCheckin: (goalId: string, status: 'clean' | 'relapse') => void;
 }
+const rituals: { key: RitualType; icon: typeof Moon; label: string }[] = [
+  { key: 'silence', icon: Moon, label: 'Find stillness' },
+  { key: 'affirmations', icon: Sparkles, label: 'Speak kindly' },
+  { key: 'visualization', icon: Eye, label: 'See possibility' },
+  { key: 'exercise', icon: Leaf, label: 'Move your body' },
+  { key: 'reading', icon: BookOpen, label: 'Feed your mind' },
+  { key: 'scribing', icon: PenLine, label: 'Make space' },
+];
 
-export const HomeTab: React.FC<HomeTabProps> = ({
-  userName,
-  todaySession,
-  disciplineGoals,
-  disciplineRelapses,
-  disciplineCheckins,
-  onStartRitualSequence,
-  onOpenRitual,
-  onOpenSupport,
-  onSwitchTab,
-}) => {
-  const currentHour = new Date().getHours();
-  const completedCount = todaySession?.completedRituals.length ?? 0;
-  const totalRituals = 6;
-  const isMorningComplete = completedCount >= totalRituals;
+export const HomeTab: React.FC<HomeTabProps> = ({ userName, todaySession, allSessions, routineMinutes, disciplineGoals, disciplineRelapses, disciplineCheckins, onStartRitualSequence, onOpenRitual, onOpenSupport, onSwitchTab, onQuickCheckin }) => {
+  const hour = new Date().getHours();
+  const greeting = hour >= 17 || hour < 4 ? 'Good evening' : hour >= 12 ? 'Good afternoon' : 'Good morning';
+  const completed = todaySession?.completedRituals ?? [];
+  const [quote, setQuote] = useState(() => getContextualMotivation({ hour, ritualsCompletedToday: completed.length, totalRituals: 6 }));
+  const today = getLocalDateString();
+  const next = rituals.find(r => !completed.includes(r.key));
+  const days = getPastNDays(7);
+  const activeDays = days.filter(date => allSessions.some(s => s.date === date && s.completedRituals.length > 0)).length;
 
-  // Dynamic greeting
-  let greetingTime = 'Good Morning';
-  if (currentHour >= 12 && currentHour < 17) {
-    greetingTime = 'Good Afternoon';
-  } else if (currentHour >= 17 || currentHour < 4) {
-    greetingTime = 'Good Evening';
-  }
-
-  // Motivational quote state
-  const [quote, setQuote] = useState(() =>
-    getContextualMotivation({
-      hour: currentHour,
-      ritualsCompletedToday: completedCount,
-      totalRituals,
-    })
-  );
-
-  const handleShuffleQuote = () => {
-    setQuote(getRandomMotivation());
-  };
-
-  // Next ritual to complete
-  const allRituals: RitualType[] = ['silence', 'affirmations', 'visualization', 'exercise', 'reading', 'scribing'];
-  const nextRitual = allRituals.find((r) => !todaySession?.completedRituals.includes(r)) || 'silence';
-
-  // Last 7 days for consistency strip
-  const past7Days = getPastNDays(7);
-  const todayStr = getLocalDateString();
-
-  return (
-    <div className="space-y-4 pb-4 animate-in fade-in duration-200">
-      {/* 1. GREETING & DATE HEADER */}
-      <div className="flex items-center justify-between pt-1">
-        <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-dawn-gold flex items-center space-x-1.5 drop-shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-dawn-gold animate-pulse" />
-            <span>{formatDateFriendly(todayStr)}</span>
-          </span>
-          <h2 className="text-xl font-extrabold tracking-tight text-white leading-tight drop-shadow-sm">
-            {greetingTime}, {userName || 'Friend'}
-          </h2>
-        </div>
-        <button
-          onClick={onOpenSupport}
-          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-rose-500/15 border border-rose-400/30 text-rose-300 text-xs font-semibold shadow-sm active:scale-95 backdrop-blur-md hover:bg-rose-500/25 transition-all"
-        >
-          <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
-          <span>I Need Support</span>
-        </button>
-      </div>
-
-      {/* 2. DYNAMIC MOTIVATIONAL LIQUID GLASS CARD */}
-      <div className="relative glass-card glass-card-interactive rounded-3xl p-4.5 overflow-hidden group">
-        <div className="absolute top-0 right-0 w-36 h-36 bg-dawn-gold/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 rounded-full bg-dawn-gold/20 border border-dawn-gold/30 flex items-center justify-center text-dawn-gold shadow-gold-sm">
-              <Sparkles className="w-3.5 h-3.5" />
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-dawn-gold">
-              Daily Guidance
-            </span>
-          </div>
-          <button
-            onClick={handleShuffleQuote}
-            className="text-dawn-muted hover:text-white p-1 rounded-full transition-colors active:rotate-180 duration-300 bg-white/[0.05] border border-white/10"
-            aria-label="New motivational message"
-          >
-            <RotateCw className="w-3.5 h-3.5" />
-          </button>
-        </div>
-        <p className="text-xs sm:text-sm font-medium text-slate-200 mt-2.5 leading-relaxed italic drop-shadow-sm">
-          "{quote.text}"
-        </p>
-      </div>
-
-      {/* 3. MIRACLE MORNING S.A.V.E.R.S. LIQUID PROGRESS CARD */}
-      <div className="glass-card rounded-3xl p-4.5 space-y-3.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-dawn-amber/25 to-dawn-gold/15 border border-dawn-gold/30 text-dawn-gold flex items-center justify-center shadow-gold-sm">
-              <Flame className="w-4 h-4 fill-dawn-gold/30 text-dawn-gold" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-white tracking-tight">Today's S.A.V.E.R.S.</h3>
-              <p className="text-[10px] text-dawn-muted">Miracle Morning Rituals</p>
-            </div>
-          </div>
-          <span className="text-xs font-bold text-dawn-gold px-2.5 py-0.5 rounded-full bg-dawn-gold/15 border border-dawn-gold/30 backdrop-blur-md shadow-gold-sm">
-            {completedCount} / {totalRituals}
-          </span>
-        </div>
-
-        {/* 6 Ritual Chips / Liquid Glass Indicators */}
-        <div className="grid grid-cols-6 gap-1.5 py-1">
-          {allRituals.map((rKey) => {
-            const def = RITUAL_DEFINITIONS[rKey];
-            const isDone = todaySession?.completedRituals.includes(rKey);
-
-            return (
-              <button
-                key={rKey}
-                onClick={() => onOpenRitual(rKey)}
-                className={`py-2 flex flex-col items-center justify-center rounded-2xl border transition-all active:scale-95 ${
-                  isDone
-                    ? 'bg-dawn-gold/25 border-dawn-gold/60 text-dawn-gold font-bold shadow-gold-sm'
-                    : 'bg-white/[0.04] border-white/[0.08] text-slate-400 hover:border-dawn-gold/40 hover:bg-white/[0.07]'
-                }`}
-                title={def.name}
-              >
-                <span className="text-xs font-extrabold">{def.shortName}</span>
-                <span className="text-[9px] mt-0.5 capitalize truncate max-w-[42px] hidden xs:block font-medium">
-                  {def.name}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Liquid Gold Action Button */}
-        <button
-          onClick={onStartRitualSequence}
-          className="w-full py-3 liquid-gold-button rounded-2xl flex items-center justify-center space-x-2 text-xs uppercase tracking-wider min-h-touch active:scale-98"
-        >
-          {isMorningComplete ? (
-            <>
-              <CheckCircle2 className="w-4 h-4 fill-dawn-dark text-dawn-gold-light" />
-              <span>Morning Rituals Complete — Well Done!</span>
-            </>
-          ) : completedCount > 0 ? (
-            <>
-              <span>Continue Morning ({RITUAL_DEFINITIONS[nextRitual].name})</span>
-              <ArrowRight className="w-4 h-4" />
-            </>
-          ) : (
-            <>
-              <Flame className="w-4 h-4 fill-dawn-dark" />
-              <span>Begin Miracle Morning</span>
-              <ArrowRight className="w-4 h-4" />
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* 4. PERSONAL DISCIPLINE SUMMARY CARDS */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
-            <Shield className="w-3.5 h-3.5 text-dawn-gold" />
-            <span>Personal Discipline</span>
-          </span>
-          <button
-            onClick={() => onSwitchTab('focus')}
-            className="text-[11px] text-dawn-gold hover:underline font-medium"
-          >
-            View Details
-          </button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2.5">
-          {disciplineGoals.map((goal) => {
-            const goalRelapses = disciplineRelapses.filter((r) => r.goalId === goal.id);
-            const goalCheckins = disciplineCheckins.filter((c) => c.goalId === goal.id);
-            const stats = calculateStreakStats({
-              startDate: goal.startDate,
-              relapses: goalRelapses,
-              checkins: goalCheckins,
-            });
-
-            const hasCheckedInToday = goalCheckins.some((c) => c.date === todayStr);
-
-            return (
-              <div
-                key={goal.id}
-                className="glass-card glass-card-interactive rounded-2xl p-3.5 flex flex-col justify-between space-y-2 cursor-pointer"
-                onClick={() => onSwitchTab('focus')}
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold text-white truncate max-w-[100px]">
-                      {goal.title.replace('-Free', '')}
-                    </span>
-                    <span className="text-xs drop-shadow-sm">{stats.nextMilestone.badge}</span>
-                  </div>
-                  <div className="flex items-baseline space-x-1 mt-1">
-                    <span className="text-2xl font-black text-dawn-gold font-mono drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
-                      {stats.currentStreakDays}
-                    </span>
-                    <span className="text-[10px] text-dawn-muted font-semibold uppercase">
-                      Days
-                    </span>
-                  </div>
-                  <p className="text-[9px] text-slate-400 mt-0.5 truncate">
-                    Best: {stats.longestStreakDays}d • Next: {stats.nextMilestone.days}d
-                  </p>
-                </div>
-
-                <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between">
-                  <span className="text-[9px] text-dawn-muted">Today:</span>
-                  <span
-                    className={`text-[9px] px-2 py-0.5 rounded-full font-semibold border ${
-                      hasCheckedInToday
-                        ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
-                        : 'bg-white/[0.06] border-white/10 text-dawn-gold'
-                    }`}
-                  >
-                    {hasCheckedInToday ? 'Clean ✓' : 'Active'}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 5. 7-DAY CONSISTENCY STRIP */}
-      <div className="glass-card rounded-2xl p-3.5 space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-slate-300 flex items-center space-x-1.5">
-            <Calendar className="w-3.5 h-3.5 text-dawn-gold" />
-            <span>Past 7 Days Consistency</span>
-          </span>
-          <button
-            onClick={() => onSwitchTab('progress')}
-            className="text-[11px] text-dawn-gold hover:underline"
-          >
-            Calendar
-          </button>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1.5 text-center pt-1">
-          {past7Days.map((dStr) => {
-            const d = new Date(dStr + 'T00:00:00');
-            const dayLetter = d.toLocaleDateString(undefined, { weekday: 'narrow' });
-            const isTodayDate = dStr === todayStr;
-
-            const hadRelapse = disciplineRelapses.some((r) => r.date === dStr);
-            const isClean = !hadRelapse && dStr <= todayStr;
-
-            return (
-              <div
-                key={dStr}
-                className={`py-2 rounded-xl border flex flex-col items-center justify-center transition-all ${
-                  isTodayDate
-                    ? 'border-dawn-gold/60 bg-dawn-gold/15 shadow-gold-sm'
-                    : 'border-white/[0.06] bg-white/[0.03]'
-                }`}
-              >
-                <span className="text-[9px] text-dawn-muted font-bold">{dayLetter}</span>
-                <div
-                  className={`w-2.5 h-2.5 rounded-full mt-1.5 ${
-                    hadRelapse
-                      ? 'bg-rose-400 shadow-[0_0_8px_rgba(244,63,94,0.6)]'
-                      : isClean
-                      ? 'bg-dawn-gold shadow-gold-sm'
-                      : 'bg-white/20'
-                  }`}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+  return <div className="home-dashboard">
+    <div className="welcome">
+      <p>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+      <h2>{greeting}{userName && userName.toLowerCase() !== 'friend' ? `, ${userName}` : ''}.</h2>
+      <span>A little time for yourself. A better start.</span>
     </div>
-  );
+    <div className="home-primary">
+      <section className="morning-panel" aria-labelledby="morning-title">
+        <div className="sunrise-art" aria-hidden="true"><div className="sun-orbit orbit-outer"/><div className="sun-orbit orbit-inner"/><div className="sun-disc"/><div className="sun-horizon"/></div>
+        <div className="morning-copy">
+          <span className="routine-meta"><Sunrise size={16}/> Your daily beginning</span>
+          <h3 id="morning-title">Make room<br/>for a brighter day.</h3>
+          <p>{completed.length === 6 ? 'You showed up for yourself today.' : `Six simple rituals. ${routineMinutes} minutes just for you.`}</p>
+        </div>
+        <div className="morning-bottom">
+          <div className="routine-progress"><span>{completed.length} of 6 rituals complete</span><span>{Math.round(completed.length / 6 * 100)}%</span></div>
+          <div className="routine-track" aria-label={`${completed.length} of 6 rituals complete`}>{rituals.map(r => <span key={r.key} className={completed.includes(r.key) ? 'done' : ''}/>)}</div>
+          <button className="primary-action" onClick={onStartRitualSequence}><Play size={16} fill="currentColor"/><span>{completed.length === 6 ? 'Practice again' : completed.length ? 'Continue my morning' : 'Begin my morning'}</span><ArrowRight size={18}/></button>
+          <p className="next-ritual">{next ? `Up next: ${RITUAL_DEFINITIONS[next.key].name}` : 'Take this feeling into the rest of your day.'}</p>
+        </div>
+      </section>
+      <section className="ritual-shortcuts" aria-labelledby="rituals-title">
+        <div className="section-heading"><h3 id="rituals-title">Your daily rituals</h3><button onClick={() => onSwitchTab('rituals')}>Choose routine <ChevronRight size={14}/></button></div>
+        <div className="ritual-grid">{rituals.map(({ key, icon: Icon, label }) => <button key={key} className={`ritual-shortcut ${completed.includes(key) ? 'is-done' : ''}`} onClick={() => onOpenRitual(key)}>
+          <span className={`ritual-symbol symbol-${key}`}>{completed.includes(key) ? <Check size={19}/> : <Icon size={19}/>}</span>
+          <strong>{RITUAL_DEFINITIONS[key].name}</strong><span>{completed.includes(key) ? 'Completed today' : label}</span>
+        </button>)}</div>
+      </section>
+      <section className="daily-note"><div className="section-heading"><h3>A thought to carry</h3><button className="icon-button" onClick={() => setQuote(getRandomMotivation())} aria-label="New motivational message"><RotateCw size={15}/></button></div><blockquote>{quote.text}</blockquote><span>One small step is still a step forward.</span></section>
+    </div>
+    <div className="home-secondary">
+      <section className="week-panel">
+        <div className="section-heading"><h3>This week</h3><button onClick={() => onSwitchTab('progress')} aria-label="View progress"><ArrowRight size={17}/></button></div>
+        <p><strong>{activeDays}</strong> {activeDays === 1 ? 'day' : 'days'} you made time for yourself</p>
+        <div className="week-days">{days.map(date => {
+          const session = allSessions.find(s => s.date === date);
+          const count = session?.completedRituals.length ?? 0;
+          return <div key={date} className={date === today ? 'is-today' : ''} aria-label={`${date}: ${count} rituals completed`}><span>{new Date(date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'narrow' })}</span><span className={`day-mark ${count === 6 ? 'complete' : count > 0 ? 'partial' : ''}`}>{count === 6 ? <Check size={14}/> : new Date(date + 'T00:00:00').getDate()}</span></div>;
+        })}</div><div className="week-legend"><span><i/>Completed</span><span><i/>In progress</span></div>
+      </section>
+      <section className="personal-section"><div className="section-heading"><h3>Personal focus</h3><button onClick={() => onSwitchTab('focus')}>View all <ChevronRight size={14}/></button></div>
+        <div className="goal-list">{disciplineGoals.length ? disciplineGoals.map(goal => {
+          const checkins = disciplineCheckins.filter(c => c.goalId === goal.id);
+          const stats = calculateStreakStats({ startDate: goal.startDate, relapses: disciplineRelapses.filter(r => r.goalId === goal.id), checkins });
+          const checked = checkins.some(c => c.date === today);
+          return <div key={goal.id} className="goal-summary"><div className="goal-top"><Shield size={17}/><button onClick={() => onSwitchTab('focus')}>{goal.title}<ChevronRight size={14}/></button></div><div className="goal-streak"><strong>{stats.currentStreakDays}<small> days</small></strong><span>Personal best: {stats.longestStreakDays} days</span></div><button className={`checkin-button ${checked ? 'checked' : ''}`} disabled={checked} onClick={() => onQuickCheckin(goal.id, 'clean')}>{checked ? <><Check size={15}/>Checked in today</> : 'Check in for today'}</button></div>;
+        }) : <button className="focus-empty" onClick={() => onSwitchTab('focus')}>Make space for your personal goals <ChevronRight size={18}/></button>}</div>
+      </section>
+      <button className="support-link" onClick={onOpenSupport}><span className="support-symbol"><HeartHandshake size={23}/></span><span><strong>A moment to reset</strong><span>Find your breath. Find your footing.</span></span><ChevronRight size={17}/></button>
+      <p className="privacy-note"><Shield size={12}/> Your journey stays on this device.</p>
+    </div>
+  </div>;
 };

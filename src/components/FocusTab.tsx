@@ -73,6 +73,7 @@ export const FocusTab: React.FC<FocusTabProps> = ({
         // Trigger celebratory confetti
         try {
           confetti({
+            disableForReducedMotion: true,
             particleCount: 55,
             spread: 65,
             origin: { y: 0.7 },
@@ -99,7 +100,7 @@ export const FocusTab: React.FC<FocusTabProps> = ({
   };
 
   return (
-    <div className="space-y-4 pb-4 animate-in fade-in duration-200">
+    <div className="focus-tab space-y-4 pb-4 animate-in fade-in duration-200">
       {/* Header */}
       <div className="flex items-center justify-between pt-1">
         <div>
@@ -158,7 +159,7 @@ export const FocusTab: React.FC<FocusTabProps> = ({
 
         {/* Next Milestone Progress Bar */}
         <div className="mt-5 p-3.5 bg-white/[0.04] rounded-2xl border border-white/10 backdrop-blur-md text-left space-y-2">
-          <div className="flex items-center justify-between text-xs">
+          <div className="milestone-heading flex items-center justify-between text-xs">
             <span className="font-bold text-white flex items-center space-x-1.5">
               <span>{stats.nextMilestone.badge}</span>
               <span>Next Milestone: {stats.nextMilestone.title} ({stats.nextMilestone.days}d)</span>
